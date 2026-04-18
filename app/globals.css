@@ -1,0 +1,322 @@
+@import "tailwindcss";
+
+:root {
+  /* Cyberpunk Neon Colors */
+  --neon-cyan: #00f0ff;
+  --neon-magenta: #ff00ff;
+  --neon-yellow: #ffff00;
+  --neon-green: #00ff88;
+  --neon-red: #ff0044;
+  --neon-purple: #b400ff;
+  
+  /* Dark Cyberpunk Background */
+  --background: #0a0a12;
+  --background-secondary: #12121f;
+  --background-card: #1a1a2e;
+  --background-hover: #252540;
+  
+  /* Foreground */
+  --foreground: #e0e0ff;
+  --foreground-muted: #8888aa;
+  
+  /* Glow effects */
+  --glow-cyan: 0 0 10px #00f0ff, 0 0 20px #00f0ff40, 0 0 40px #00f0ff20;
+  --glow-magenta: 0 0 10px #ff00ff, 0 0 20px #ff00ff40, 0 0 40px #ff00ff20;
+  --glow-yellow: 0 0 10px #ffff00, 0 0 20px #ffff0040, 0 0 40px #ffff0020;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Base Cyberpunk Styles */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Orbitron', 'Rajdhani', Arial, sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Animated Grid Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Scanline Effect */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.3;
+}
+
+/* Neon Text Glow */
+.neon-text {
+  text-shadow: var(--glow-cyan);
+}
+
+.neon-text-magenta {
+  text-shadow: var(--glow-magenta);
+}
+
+.neon-text-yellow {
+  text-shadow: var(--glow-yellow);
+}
+
+/* Neon Border Glow */
+.neon-border {
+  border: 1px solid var(--neon-cyan);
+  box-shadow: var(--glow-cyan), inset 0 0 10px rgba(0, 240, 255, 0.1);
+}
+
+.neon-border-magenta {
+  border: 1px solid var(--neon-magenta);
+  box-shadow: var(--glow-magenta), inset 0 0 10px rgba(255, 0, 255, 0.1);
+}
+
+/* Neon Button Base */
+.neon-button {
+  background: transparent;
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  padding: 0.5rem 1.5rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: var(--glow-cyan);
+}
+
+.neon-button:hover {
+  background: var(--neon-cyan);
+  color: var(--background);
+  box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan);
+}
+
+.neon-button-magenta {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+  box-shadow: var(--glow-magenta);
+}
+
+.neon-button-magenta:hover {
+  background: var(--neon-magenta);
+  color: var(--background);
+  box-shadow: 0 0 20px var(--neon-magenta), 0 0 40px var(--neon-magenta);
+}
+
+/* Card Styles */
+.cyber-card {
+  background: var(--background-card);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyber-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--neon-cyan), var(--neon-magenta));
+}
+
+/* Cyberpunk Input */
+.cyber-input {
+  background: var(--background-secondary);
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  color: var(--foreground);
+  padding: 0.75rem 1rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.cyber-input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan), inset 0 0 10px rgba(0, 240, 255, 0.1);
+}
+
+/* Glow Animation */
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan);
+  }
+  50% {
+    box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+  }
+}
+
+@keyframes neon-pulse-magenta {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--neon-magenta), 0 0 10px var(--neon-magenta);
+  }
+  50% {
+    box-shadow: 0 0 10px var(--neon-magenta), 0 0 20px var(--neon-magenta), 0 0 30px var(--neon-magenta);
+  }
+}
+
+@keyframes scanline-move {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.animate-neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+.animate-neon-pulse-magenta {
+  animation: neon-pulse-magenta 2s ease-in-out infinite;
+}
+
+/* Text gradient for headings */
+.gradient-text {
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Status indicators */
+.status-online {
+  box-shadow: 0 0 8px var(--neon-green);
+  background: var(--neon-green);
+}
+
+.status-offline {
+  box-shadow: 0 0 8px var(--neon-red);
+  background: var(--neon-red);
+}
+
+/* Link hover effects */
+.cyber-link {
+  color: var(--neon-cyan);
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.cyber-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--neon-cyan);
+  transition: width 0.3s ease;
+  box-shadow: var(--glow-cyan);
+}
+
+.cyber-link:hover::after {
+  width: 100%;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neon-cyan);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-magenta);
+  box-shadow: var(--glow-magenta);
+}
+
+/* Table styles */
+.cyber-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cyber-table th {
+  background: var(--background-secondary);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  padding: 1rem;
+  text-align: left;
+  color: var(--neon-cyan);
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cyber-table td {
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  padding: 0.75rem 1rem;
+}
+
+.cyber-table tr:hover td {
+  background: var(--background-hover);
+}
+
+/* Badge styles */
+.cyber-badge {
+  background: transparent;
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cyber-badge-win {
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+  box-shadow: 0 0 8px var(--neon-green);
+}
+
+.cyber-badge-loss {
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+  box-shadow: 0 0 8px var(--neon-red);
+}
