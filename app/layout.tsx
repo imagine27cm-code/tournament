@@ -38,22 +38,24 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col" style={{background: 'var(--background)'}}>
         <Providers>
-          <header className="border-b" style={{borderColor: 'rgba(0, 240, 255, 0.3)', background: 'rgba(18, 18, 31, 0.9)', backdropFilter: 'blur(10px)'}}>
-            <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-              <div className="flex items-center gap-4">
-                <Link href="/" className="font-semibold tracking-tight" style={{fontFamily: "'Orbitron', sans-serif", fontSize: '1.25rem', color: '#00f0ff', textShadow: '0 0 10px #00f0ff, 0 0 20px #00f0ff40', letterSpacing: '2px'}}>
-                  TOURNEY
+          <header className="border-b" style={{borderColor: 'rgba(122, 64, 255, 0.2)', background: 'rgba(22, 22, 35, 0.95)', backdropFilter: 'blur(15px)'}}>
+            <div className="mx-auto flex items-center justify-between px-6 py-4" style={{maxWidth: '100%'}}>
+              <div className="flex items-center gap-8">
+                <Link href="/" className="font-bold tracking-wider uppercase" style={{fontFamily: "'Rajdhani', sans-serif", fontSize: '1.1rem', color: '#ffffff', letterSpacing: '1px'}}>
+                  ИГРАТЬ
                 </Link>
-                <nav className="text-sm flex items-center gap-3" style={{color: '#8888aa'}}>
-                  <Link href="/dashboard" className="cyber-link">
-                    Кабинет
+                <nav className="text-sm flex items-center gap-7" style={{color: '#aaaacc', fontFamily: "'Rajdhani', sans-serif", fontSize: '1rem', fontWeight: 500}}>
+                  <Link href="/dashboard" className="hover:text-white transition-colors">
+                    КАБИНЕТ
                   </Link>
-                  <Link href="/players" className="cyber-link">
-                    Игроки
+                  <Link href="/players" className="hover:text-white transition-colors">
+                    ИГРОКИ
                   </Link>
                 </nav>
               </div>
-              <AuthStatus />
+              <div className="flex items-center gap-5">
+                <AuthStatus />
+              </div>
             </div>
           </header>
           <main className="flex-1 pr-64">{children}</main>
