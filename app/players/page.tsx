@@ -1,10 +1,9 @@
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { PlayersClient } from "@/components/PlayersClient";
 
 export default async function PlayersPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (!session?.user?.id) redirect("/signin?callbackUrl=/players");
 
   return (
