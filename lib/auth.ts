@@ -3,9 +3,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
 
-export const authOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: process.env.NODE_ENV === "development",
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt" as const },
   providers: [
     CredentialsProvider({
       name: "Email/Password",
@@ -53,7 +53,7 @@ export const authOptions = {
   pages: {
     signIn: "/signin",
   },
-};
+});
 
 export type AuthedUser = {
   id: string;
@@ -61,4 +61,3 @@ export type AuthedUser = {
   role: "PLAYER" | "ADMIN";
   name?: string | null;
 };
-
