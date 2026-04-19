@@ -9,7 +9,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -67,6 +66,15 @@ model User {
   role         UserRole @default(PLAYER)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  // RP System
+  rp           Int      @default(1000)
+  xp           Int      @default(0)
+  level        Int      @default(1)
+  wins         Int      @default(0)
+  losses       Int      @default(0)
+  winStreak    Int      @default(0)
+  bestWinStreak Int     @default(0)
 
   teamsCreated           Team[]          @relation("TeamCaptain")
   teamMembers            TeamMember[]
