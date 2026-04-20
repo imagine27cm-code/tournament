@@ -22,7 +22,7 @@ export function FriendList() {
 
     async function loadFriends() {
       try {
-        const res = await fetch("/api/players", { cache: "no-store" });
+        const res = await fetch("/api/players", { cache: "no-store", credentials: "include" });
         const data = (await res.json().catch(() => ({}))) as { players?: Friend[] };
         const allPlayers = data.players ?? [];
         // Фильтруем только друзей (relationStatus === "FRIEND")

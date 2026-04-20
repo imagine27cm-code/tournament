@@ -36,9 +36,9 @@ export function PlayersClient({ myUserId }: { myUserId: string }) {
   async function load() {
     setLoading(true);
     const [pRes, tRes, rRes] = await Promise.all([
-      fetch("/api/players", { cache: "no-store" }),
-      fetch("/api/teams", { cache: "no-store" }),
-      fetch("/api/friends/requests", { cache: "no-store" }),
+      fetch("/api/players", { cache: "no-store", credentials: "include" }),
+      fetch("/api/teams", { cache: "no-store", credentials: "include" }),
+      fetch("/api/friends/requests", { cache: "no-store", credentials: "include" }),
     ]);
 
     const pData = (await pRes.json().catch(() => ({}))) as { players?: PlayerDto[] };
@@ -87,7 +87,7 @@ export function PlayersClient({ myUserId }: { myUserId: string }) {
                   className="neon-button"
                   style={{borderRadius: '4px', padding: '0.4rem 0.8rem', fontSize: '0.7rem'}}
                   onClick={async () => {
-                    await fetch(`/api/friends/requests/${r.id}/accept`, { method: "POST" });
+                     await fetch(`/api/friends/requests/${r.id}/accept`, { method: "POST", credentials: "include" });
                     await load();
                   }}
                 >
@@ -126,11 +126,12 @@ export function PlayersClient({ myUserId }: { myUserId: string }) {
                   className="neon-button"
                   style={{borderRadius: '4px', padding: '0.4rem 0.8rem', fontSize: '0.7rem', opacity: p.relationStatus !== "NONE" ? 0.5 : 1}}
                   onClick={async () => {
-                    const res = await fetch("/api/friends/requests", {
-                      method: "POST",
-                      headers: { "content-type": "application/json" },
-                      body: JSON.stringify({ toUserId: p.id }),
-                    });
+                     const res = await fetch("/api/friends/requests", {
+                       method: "POST",
+                       headers: { "content-type": "application/json" },
+                       body: JSON.stringify({ toUserId: p.id }),
+                       credentials: "include"
+                     });
                     if (!res.ok) {
                       const d = await res.json().catch(() => ({}));
                       setMsg(`Ошибка друзей: ${d?.error ?? "UNKNOWN"}`);
@@ -169,11 +170,12 @@ export function PlayersClient({ myUserId }: { myUserId: string }) {
                   onClick={async () => {
                     const teamId = selectedTeamByPlayer[p.id] ?? defaultTeamId;
                     if (!teamId) return;
-                    const res = await fetch(`/api/teams/${teamId}/invites`, {
-                      method: "POST",
-                      headers: { "content-type": "application/json" },
-                      body: JSON.stringify({ email: p.email }),
-                    });
+                     const res = await fetch(`/api/teams/${teamId}/invites`, {
+                       method: "POST",
+                       headers: { "content-type": "application/json" },
+                       body: JSON.stringify({ email: p.email }),
+                       credentials: "include"
+                     });
                     if (!res.ok) {
                       const d = await res.json().catch(() => ({}));
                       setMsg(`Ошибка инвайта: ${d?.error ?? "UNKNOWN"}`);
