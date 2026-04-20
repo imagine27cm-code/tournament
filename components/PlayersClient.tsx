@@ -25,36 +25,23 @@ type IncomingDto = {
   name: string | null;
 };
 
-export function PlayersClient({ myUserId }: { myUserId: string }) {
-  const [players, setPlayers] = useState<PlayerDto[]>([]);
-  const [teams, setTeams] = useState<TeamDto[]>([]);
-  const [incoming, setIncoming] = useState<IncomingDto[]>([]);
+export function PlayersClient({
+  myUserId,
+  initialPlayers,
+  initialTeams,
+  initialIncoming
+}: {
+  myUserId: string;
+  initialPlayers: PlayerDto[];
+  initialTeams: TeamDto[];
+  initialIncoming: IncomingDto[];
+}) {
+  const [players, setPlayers] = useState<PlayerDto[]>(initialPlayers);
+  const [teams, setTeams] = useState<TeamDto[]>(initialTeams);
+  const [incoming, setIncoming] = useState<IncomingDto[]>(initialIncoming);
   const [selectedTeamByPlayer, setSelectedTeamByPlayer] = useState<Record<string, string>>({});
   const [msg, setMsg] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  async function load() {
-    setLoading(true);
-    const [pRes, tRes, rRes] = await Promise.all([
-      fetch("/api/players", { cache: "no-store", credentials: "include" }),
-      fetch("/api/teams", { cache: "no-store", credentials: "include" }),
-      fetch("/api/friends/requests", { cache: "no-store", credentials: "include" }),
-    ]);
-
-    const pData = (await pRes.json().catch(() => ({}))) as { players?: PlayerDto[] };
-    const tData = (await tRes.json().catch(() => ({}))) as { teams?: TeamDto[] };
-    const rData = (await rRes.json().catch(() => ({}))) as { incoming?: IncomingDto[] };
-
-    setPlayers(pData.players ?? []);
-    const myCaptainTeams = (tData.teams ?? []).filter((t) => t.captainId === myUserId);
-    setTeams(myCaptainTeams);
-    setIncoming(rData.incoming ?? []);
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    load();
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   const defaultTeamId = useMemo(() => teams[0]?.id ?? "", [teams]);
 
