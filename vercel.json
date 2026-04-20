@@ -17,10 +17,6 @@
     {
       "source": "/socket.io/:path*",
       "destination": "/api/socket"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/"
     }
   ],
   "headers": [
