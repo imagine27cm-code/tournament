@@ -35,7 +35,7 @@ export default async function PlayersPage() {
 
   const teamsWithCaptain = teams.map(t => ({
     ...t,
-    captainId: session.user.id
+    captainId: session.user!.id
   }));
 
   const incomingRequests = incoming.map(r => ({
