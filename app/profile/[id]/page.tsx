@@ -29,15 +29,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
             select: { id: true, name: true }
           }
         }
-      },
-      _count: {
-        select: {
-          friendOf: true,
-          friendTo: true,
-          teamRegistrations: true,
-          teamWins: true,
-          matchWins: true
-        }
       }
     }
   });
