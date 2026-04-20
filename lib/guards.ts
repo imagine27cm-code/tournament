@@ -8,7 +8,10 @@ const session = await auth();
 
 export async function requireAdmin() {
   const session = await requireSession();
-  if (session.user?.role !== "ADMIN") throw new Error("FORBIDDEN");
+  if (session.user?.role !== "ADMIN") {
+    const { redirect } = await import("next/navigation");
+    redirect("/dashboard");
+  }
   return session;
 }
 
