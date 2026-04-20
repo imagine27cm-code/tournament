@@ -10,11 +10,19 @@ type TournamentSummary = {
 };
 
 async function getTournaments() {
-  const res = await fetch(`${process.env.NEXTAUTH_URL ?? "http://localhost:3000"}/api/tournaments`, {
-    cache: "no-store",
-  });
-  if (!res.ok) return { tournaments: [] as TournamentSummary[] };
-  return (await res.json()) as { tournaments: TournamentSummary[] };
+  try {
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+
+    const res = await fetch(`${baseUrl}/api/tournaments`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return { tournaments: [] as TournamentSummary[] };
+    return (await res.json()) as { tournaments: TournamentSummary[] };
+  } catch {
+    return { tournaments: [] as TournamentSummary[] };
+  }
 }
 
 export default async function Home() {
