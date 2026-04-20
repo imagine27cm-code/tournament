@@ -18,7 +18,13 @@ async function getTournaments() {
 }
 
 export default async function Home() {
-  const { tournaments } = await getTournaments();
+  let tournaments: TournamentSummary[] = [];
+  try {
+    const data = await getTournaments();
+    tournaments = data.tournaments ?? [];
+  } catch {
+    tournaments = [];
+  }
   return (
     <div className="px-10 py-10">
       <h1 className="text-4xl font-bold mb-12 tracking-wide" style={{fontFamily: "'Rajdhani', sans-serif", color: '#ffffff', fontWeight: 700}}>Список ебанных турниров</h1>
