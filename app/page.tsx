@@ -11,15 +11,22 @@ type TournamentSummary = {
 
 async function getTournaments() {
   try {
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : process.env.NEXTAUTH_URL ?? "http://localhost:3000";
-
-    const res = await fetch(`${baseUrl}/api/tournaments`, {
-      cache: "no-store",
+    // НЕ ДЕЛАЙ FETCH НА САМОГО СЕБЯ С СЕРВЕРА!
+    // ВЫЗЫВАЙ ПРЯМО КОД ИЗ API МАРШРУТА!
+    const { prisma } = await import("@/lib/prisma");
+    
+    const tournaments = await prisma.tournament.findMany({
+      orderBy: { createdAt: "desc" },
+      select: { id: true, name: true, status: true, startDate: true, endDate: true, teamLimit: true },
     });
-    if (!res.ok) return { tournaments: [] as TournamentSummary[] };
-    return (await res.json()) as { tournaments: TournamentSummary[] };
+    
+    return { 
+      tournaments: tournaments.map(t => ({
+        ...t,
+        startDate: t.startDate.toISOString(),
+        endDate: t.endDate.toISOString()
+      })) 
+    };
   } catch {
     return { tournaments: [] as TournamentSummary[] };
   }
