@@ -29,8 +29,13 @@ export default async function PlayersPage() {
   // Нормализуем данные
   const playersWithStatus = players.map(p => ({
     ...p,
-    relationStatus: "NONE",
+    relationStatus: "NONE" as const,
     relationRequestId: null
+  }));
+
+  const teamsWithCaptain = teams.map(t => ({
+    ...t,
+    captainId: session.user.id
   }));
 
   const incomingRequests = incoming.map(r => ({
@@ -49,9 +54,9 @@ export default async function PlayersPage() {
       <div className="mt-8">
         {/* ✅ Передаём все данные из серверной части напрямую в клиент! */}
         <PlayersClient 
-          myUserId={session.user.id} 
+          myUserId={session.user!.id} 
           initialPlayers={playersWithStatus}
-          initialTeams={teams}
+          initialTeams={teamsWithCaptain}
           initialIncoming={incomingRequests}
         />
       </div>
