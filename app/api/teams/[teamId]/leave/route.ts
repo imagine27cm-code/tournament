@@ -27,7 +27,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ teamId:
   });
 
   // ✅ Если после выхода в команде не осталось никого - удаляем команду полностью
-  const remainingMembers = team.members.filter(m => m.id !== session.user.id);
+  const remainingMembers = team.members.filter(m => m.id !== session.user!.id);
 
   if (remainingMembers.length === 0) {
     await prisma.team.delete({
