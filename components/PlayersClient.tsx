@@ -31,8 +31,10 @@ export function PlayersClient({ myUserId }: { myUserId: string }) {
   const [incoming, setIncoming] = useState<IncomingDto[]>([]);
   const [selectedTeamByPlayer, setSelectedTeamByPlayer] = useState<Record<string, string>>({});
   const [msg, setMsg] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   async function load() {
+    setLoading(true);
     const [pRes, tRes, rRes] = await Promise.all([
       fetch("/api/players", { cache: "no-store" }),
       fetch("/api/teams", { cache: "no-store" }),
@@ -47,6 +49,7 @@ export function PlayersClient({ myUserId }: { myUserId: string }) {
     const myCaptainTeams = (tData.teams ?? []).filter((t) => t.captainId === myUserId);
     setTeams(myCaptainTeams);
     setIncoming(rData.incoming ?? []);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -57,6 +60,12 @@ export function PlayersClient({ myUserId }: { myUserId: string }) {
 
   return (
     <div className="space-y-6">
+      {loading ? (
+        <div className="cyber-card rounded-lg p-8 text-center">
+          <div className="text-sm" style={{color: '#8888aa'}}>Загрузка игроков...</div>
+        </div>
+      ) : (
+        <>
       <section className="cyber-card rounded-lg p-4">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold" style={{color: '#00f0ff', fontFamily: "'Orbitron', sans-serif", fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Входящие заявки в друзья</h2>
@@ -182,6 +191,8 @@ export function PlayersClient({ myUserId }: { myUserId: string }) {
         </div>
         {msg ? <div className="mt-3 text-xs" style={{color: '#00ff88'}}>{msg}</div> : null}
       </section>
+        </>
+      )}
     </div>
   );
 }
