@@ -6,6 +6,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ teamId:
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
 
+  // ✅ Гарантированно достаём userId после проверки
+  const userId = session.user.id;
+
   const { teamId } = await params;
 
   // Находим команду
@@ -21,13 +24,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ teamId:
     where: { id: teamId },
     data: {
       members: {
-        disconnect: { id: session.user.id }
+        disconnect: { id: userId }
       }
     }
   });
 
   // ✅ Если после выхода в команде не осталось никого - удаляем команду полностью
-  const remainingMembers = team.members.filter(m => m.id !== session.user!.id);
+  const remainingMembers = team.members.filter(m => m.id !== userId);
 
   if (remainingMembers.length === 0) {
     await prisma.team.delete({
@@ -38,7 +41,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ teamId:
   }
 
   // ✅ Если вышел капитан - передаём капитанство первому оставшемуся члену
-  if (team.captainId === session.user.id && remainingMembers.length > 0) {
+  if (team.captainId === userId && remainingMembers.length > 0) {
     await prisma.team.update({
       where: { id: teamId },
       data: { captainId: remainingMembers[0].id }
