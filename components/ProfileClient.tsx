@@ -11,7 +11,6 @@ type UserProfile = {
   wins: number;
   losses: number;
   createdAt: Date;
-  teamId: string | null;
   team?: {
     id: string;
     name: string;
@@ -35,15 +34,15 @@ export function ProfileClient({
 
   const isOwner = currentUserId === user.id;
   const isTeamCaptain = user.team?.captainId === currentUserId;
-  const isInSameTeam = user.team && user.teamId === user.teamId;
+  const isInSameTeam = user.team && user.team.id === user.team.id;
 
   async function kickFromTeam() {
-    if (!user.teamId) return;
+    if (!user.team) return;
     setLoading(true);
     setMsg(null);
 
     try {
-      const res = await fetch(`/api/teams/${user.teamId}/members/${user.id}`, {
+      const res = await fetch(`/api/teams/${user.team.id}/members/${user.id}`, {
         method: "DELETE",
         credentials: "include"
       });
@@ -59,12 +58,12 @@ export function ProfileClient({
   }
 
   async function leaveTeam() {
-    if (!user.teamId) return;
+    if (!user.team) return;
     setLoading(true);
     setMsg(null);
 
     try {
-      const res = await fetch(`/api/teams/${user.teamId}/leave`, {
+      const res = await fetch(`/api/teams/${user.team.id}/leave`, {
         method: "POST",
         credentials: "include"
       });
