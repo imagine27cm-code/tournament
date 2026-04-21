@@ -51,6 +51,9 @@ export default async function PlayersPage() {
       <p className="mt-2 text-sm" style={{color: '#8888aa'}}>
         Все зарегистрированные игроки: добавить в друзья или пригласить в команду
       </p>
+      <div className="mt-2 mb-4" style={{ color: '#7a40ff', fontSize: '0.8rem' }}>
+        👉 <a href={`/profile/${session.user.id}`} style={{ color: '#00f0ff' }}>Перейти в мой личный кабинет с RP рейтингом</a>
+      </div>
       <div className="mt-8">
         {/* ✅ Передаём все данные из серверной части напрямую в клиент! */}
         <PlayersClient 

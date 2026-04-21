@@ -1,27 +1,19 @@
 import { auth } from "@/lib/auth";
-import type { NextRequest } from "next/server";
-import { cache } from "react";
 
-// Оборачиваем auth() в кэш React. Это решает ВСЕ проблемы!
-const getSession = cache(async () => {
-  return await auth();
-});
-
-export async function requireSession(req?: any) {
-  let session;
-  
-  if (req) {
-    session = await auth(req);
-  } else {
-    session = await getSession();
+export async function requireSession() {
+  try {
+    // auth() сам определяет контекст в Next Auth v5
+    // @ts-ignore
+    const session = await auth();
+    if (!session?.user?.id) throw new Error("UNAUTHORIZED");
+    return session;
+  } catch {
+    throw new Error("UNAUTHORIZED");
   }
-
-  if (!session?.user?.id) throw new Error("UNAUTHORIZED");
-  return session;
 }
 
-export async function requireAdmin(req?: NextRequest) {
-  const session = await requireSession(req);
+export async function requireAdmin() {
+  const session = await requireSession();
   if (session.user?.role !== "ADMIN") {
     const { redirect } = await import("next/navigation");
     redirect("/dashboard");

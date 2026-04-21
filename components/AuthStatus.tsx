@@ -23,7 +23,9 @@ export function AuthStatus() {
   return (
     <div className="flex items-center gap-3 text-sm">
       <span style={{color: '#8888aa', fontSize: '0.85rem'}}>
-        {data.user.email} (<span style={{color: '#00f0ff'}}>{data.user.role}</span>)
+        <Link href={`/profile/${data.user.id}`} style={{ color: '#00f0ff' }}>{data.user.name ?? 'Профиль'}</Link>
+        {' '}
+        (<span style={{color: '#7a40ff'}}>{data.user.role}</span>)
       </span>
       <button
         onClick={() => signOut({ callbackUrl: "/" })}
