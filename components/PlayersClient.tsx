@@ -44,14 +44,14 @@ export function PlayersClient({
   const [loading, setLoading] = useState(false);
 
   async function load() {
-    setLoading(true);
-    const [pRes, tRes, rRes] = await Promise.all([
-      fetch("/api/players", { cache: "no-store", credentials: "include" }),
-      fetch("/api/teams", { cache: "no-store", credentials: "include" }),
-      fetch("/api/friends/requests", { cache: "no-store", credentials: "include" }),
-    ]);
+    try {
+      const [pRes, tRes, rRes] = await Promise.all([
+        fetch("/api/players", { cache: "no-store", credentials: "include" }),
+        fetch("/api/teams", { cache: "no-store", credentials: "include" }),
+        fetch("/api/friends/requests", { cache: "no-store", credentials: "include" }),
+      ]);
 
-    const pData = (await pRes.json().catch(() => ({}))) as { players?: PlayerDto[] };
+      const pData = (await pRes.json().catch(() => ({}))) as { players?: PlayerDto[] };
     const tData = (await tRes.json().catch(() => ({}))) as { teams?: TeamDto[] };
     const rData = (await rRes.json().catch(() => ({}))) as { incoming?: IncomingDto[] };
 
@@ -59,7 +59,10 @@ export function PlayersClient({
     const myCaptainTeams = (tData.teams ?? []).filter((t) => t.captainId === myUserId);
     setTeams(myCaptainTeams);
     setIncoming(rData.incoming ?? []);
-    setLoading(false);
+      setLoading(false);
+    } catch {
+      setLoading(false);
+    }
   }
 
   const defaultTeamId = useMemo(() => teams[0]?.id ?? "", [teams]);
