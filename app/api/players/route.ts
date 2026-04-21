@@ -10,9 +10,9 @@ type PlayerRow = {
   relationRequestId: string | null;
 };
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const session = await requireSession();
+    const session = await requireSession(req);
     const me = session.user!.id;
 
     const rows = await prisma.$queryRaw<PlayerRow[]>`
