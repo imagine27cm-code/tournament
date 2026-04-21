@@ -29,24 +29,5 @@ export async function POST(req: Request, { params }: { params: Promise<{ teamId:
     }
   });
 
-  // ✅ Если после выхода в команде не осталось никого - удаляем команду полностью
-  const remainingMembers = team.members.filter(m => m.id !== userId);
-
-  if (remainingMembers.length === 0) {
-    await prisma.team.delete({
-      where: { id: teamId }
-    });
-
-    return NextResponse.json({ ok: true, deleted: true });
-  }
-
-  // ✅ Если вышел капитан - передаём капитанство первому оставшемуся члену
-  if (team.captainId === userId && remainingMembers.length > 0) {
-    await prisma.team.update({
-      where: { id: teamId },
-      data: { captainId: remainingMembers[0].id }
-    });
-  }
-
   return NextResponse.json({ ok: true });
 }
