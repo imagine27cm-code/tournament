@@ -34,6 +34,8 @@ export default function Home() {
 
   return (
     <div className="px-10 py-10">
+
+      <div style={{ color: '#7a40ff', fontSize: '0.7rem', opacity: 0.6, marginBottom: '1rem', fontFamily: "'Orbitron', sans-serif" }}>BUILD v1.0.1</div>
       <h1 className="text-4xl font-bold mb-12 tracking-wide" style={{fontFamily: "'Rajdhani', sans-serif", color: '#ffffff', fontWeight: 700}}>Список ебанных турниров</h1>
       
       <div className="max-w-4xl">
