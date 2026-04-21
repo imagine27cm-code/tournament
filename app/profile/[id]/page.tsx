@@ -17,7 +17,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
       rp: true,
       wins: true,
       losses: true,
-      draws: true,
       createdAt: true,
       teamId: true,
       team: {

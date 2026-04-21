@@ -10,7 +10,6 @@ type UserProfile = {
   rp: number;
   wins: number;
   losses: number;
-  draws: number;
   createdAt: Date;
   teamId: string | null;
   team?: {
@@ -128,10 +127,6 @@ export function ProfileClient({
                 <div className="text-xl font-bold" style={{ color: '#ff4444' }}>{user.losses}</div>
               </div>
 
-              <div>
-                <div className="text-xs" style={{ color: '#8888aa' }}>НИЧЬИХ</div>
-                <div className="text-xl font-bold" style={{ color: '#ffff00' }}>{user.draws}</div>
-              </div>
 
               <div>
                 <div className="text-xs" style={{ color: '#8888aa' }}>WINRATE</div>
