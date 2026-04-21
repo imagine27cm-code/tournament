@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { ProfileClient } from "@/components/ProfileClient";
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
@@ -18,20 +18,20 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
       wins: true,
       losses: true,
       createdAt: true,
-      team: {
-        select: {
-          id: true,
-          name: true,
-          captainId: true,
-          members: {
-            select: { id: true, name: true }
-          }
-        }
-      }
     }
   });
 
   if (!user) notFound();
+
+  // Отдельно запросим команду
+  const team = await prisma.team.findFirst({
+    where: { members: { some: { id } } },
+    select: {
+      id: true,
+      name: true,
+      captainId: true,
+    }
+  });
 
   // Показываем почту только самому игроку
   const showEmail = session?.user?.id === user.id;
@@ -39,7 +39,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <ProfileClient
-        user={user}
+        user={{ ...user, team }}
         currentUserId={session?.user?.id ?? null}
         showEmail={showEmail}
       />

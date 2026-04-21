@@ -15,7 +15,7 @@ type UserProfile = {
     id: string;
     name: string;
     captainId: string;
-    members: { id: string; name: string | null }[];
+    members?: { id: string; name: string | null }[];
   } | null;
   _count?: any;
 };
@@ -174,7 +174,7 @@ export function ProfileClient({
             </div>
 
             <div className="mt-2 text-sm" style={{ color: '#aaaacc' }}>
-              Участников: {user.team.members.length}
+              Участников: {user.team.members?.length ?? '?'}
             </div>
           </div>
         )}
