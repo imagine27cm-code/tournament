@@ -1,10 +1,19 @@
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
+// ✅ ЕДИНСТВЕННОЕ РАБОЧЕЕ РЕШЕНИЕ ДЛЯ NEXT AUTH v5
 export async function requireSession() {
   try {
-    // auth() сам определяет контекст в Next Auth v5
+    // ✅ В серверных компонентах работает auth()
     // @ts-ignore
-    const session = await auth();
+    let session = await auth();
+    
+    if (!session?.user?.id) {
+      // ✅ В API маршрутах нужно передать headers()
+      // @ts-ignore
+      session = await auth(headers());
+    }
+    
     if (!session?.user?.id) throw new Error("UNAUTHORIZED");
     return session;
   } catch {
