@@ -44,10 +44,12 @@ export async function POST(req: Request) {
     const toUserId = parsed.data.toUserId;
     if (toUserId === me) return NextResponse.json({ error: "SELF_NOT_ALLOWED" }, { status: 400 });
 
+    // Generate UUID in JS for PostgreSQL compatibility
+    const id = crypto.randomUUID();
     await prisma.$executeRaw`
-      INSERT INTO "FriendRequest" (id, fromUserId, toUserId, status, createdAt, updatedAt)
-      VALUES (lower(hex(randomblob(16))), ${me}, ${toUserId}, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-      ON CONFLICT(fromUserId, toUserId) DO UPDATE SET status='PENDING', updatedAt=CURRENT_TIMESTAMP
+      INSERT INTO "FriendRequest" (id, "fromUserId", "toUserId", status, "createdAt", "updatedAt")
+      VALUES (${id}, ${me}, ${toUserId}, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      ON CONFLICT("fromUserId", "toUserId") DO UPDATE SET status='PENDING', "updatedAt"=CURRENT_TIMESTAMP
     `;
 
     return NextResponse.json({ ok: true });

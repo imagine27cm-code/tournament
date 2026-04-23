@@ -5,6 +5,7 @@ import { PlayersClient } from "@/components/PlayersClient";
 export default async function PlayersPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/signin?callbackUrl=/players");
+  const me = session.user.id;
 
   // ✅ НИКОГДА НЕ ДЕЛАЙ FETCH НА СЕБЯ ИЗ СЕРВЕРНОГО КОМПОНЕНТА!
   // ✅ ЗАПРАШИВАЕМ ДАННЫЕ ПРЯМО В СЕРВЕРНОМ КОМПОНЕНТЕ И ПЕРЕДАЁМ В КЛИЕНТ!
@@ -13,29 +14,54 @@ export default async function PlayersPage() {
   // Загружаем все данные прямо здесь на сервере
   const [players, teams, incoming] = await Promise.all([
     prisma.user.findMany({
-      where: { id: { not: session.user.id } },
+      where: { NOT: { id: me } },
       select: { id: true, email: true, name: true }
     }),
     prisma.team.findMany({
-      where: { captainId: session.user.id },
+      where: { captainId: me },
       select: { id: true, name: true }
     }),
     prisma.friendRequest.findMany({
-      where: { toUserId: session.user.id, status: "PENDING" },
+      where: { toUserId: me, status: "PENDING" },
       select: { id: true, fromUser: { select: { id: true, email: true, name: true } } }
     })
   ]);
 
-  // Нормализуем данные
-  const playersWithStatus = players.map(p => ({
-    ...p,
-    relationStatus: "NONE" as const,
-    relationRequestId: null
-  }));
+  // Загружаем статусы дружбы для корректного отображения
+  const friendRequests = await prisma.friendRequest.findMany({
+    where: {
+      OR: [
+        { fromUserId: me },
+        { toUserId: me }
+      ]
+    },
+    select: { id: true, fromUserId: true, toUserId: true, status: true }
+  });
+
+  // Нормализуем данные с реальными статусами дружбы
+  const playersWithStatus = players.map(p => {
+    const fr = friendRequests.find(
+      r => (r.fromUserId === me && r.toUserId === p.id) ||
+           (r.toUserId === me && r.fromUserId === p.id)
+    );
+    let relationStatus: "NONE" | "OUTGOING_PENDING" | "INCOMING_PENDING" | "FRIEND" = "NONE";
+    let relationRequestId: string | null = null;
+    if (fr) {
+      relationRequestId = fr.id;
+      if (fr.status === "ACCEPTED") relationStatus = "FRIEND";
+      else if (fr.status === "PENDING" && fr.fromUserId === me) relationStatus = "OUTGOING_PENDING";
+      else if (fr.status === "PENDING" && fr.toUserId === me) relationStatus = "INCOMING_PENDING";
+    }
+    return {
+      ...p,
+      relationStatus,
+      relationRequestId
+    };
+  });
 
   const teamsWithCaptain = teams.map(t => ({
     ...t,
-    captainId: session.user!.id
+    captainId: me
   }));
 
   const incomingRequests = incoming.map(r => ({
@@ -52,12 +78,12 @@ export default async function PlayersPage() {
         Все зарегистрированные игроки: добавить в друзья или пригласить в команду
       </p>
       <div className="mt-2 mb-4" style={{ color: '#7a40ff', fontSize: '0.8rem' }}>
-        👉 <a href={`/profile/${session.user.id}`} style={{ color: '#00f0ff' }}>Перейти в мой личный кабинет с RP рейтингом</a>
+        👉 <a href={`/profile/${me}`} style={{ color: '#00f0ff' }}>Перейти в мой личный кабинет с RP рейтингом</a>
       </div>
       <div className="mt-8">
         {/* ✅ Передаём все данные из серверной части напрямую в клиент! */}
         <PlayersClient 
-          myUserId={session.user!.id} 
+          myUserId={me} 
           initialPlayers={playersWithStatus}
           initialTeams={teamsWithCaptain}
           initialIncoming={incomingRequests}

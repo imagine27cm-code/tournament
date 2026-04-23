@@ -26,14 +26,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ teamI
     return NextResponse.json({ error: "CANNOT_KICK_YOURSELF" }, { status: 400 });
   }
 
-  // Кикаем игрока
-  await prisma.team.update({
-    where: { id: teamId },
-    data: {
-      members: {
-        disconnect: { id: memberId }
-      }
-    }
+  // Кикаем игрока (используем deleteMany для явной join-таблицы)
+  await prisma.teamMember.deleteMany({
+    where: { teamId, userId: memberId }
   });
 
   return NextResponse.json({ ok: true });

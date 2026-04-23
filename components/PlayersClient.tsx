@@ -43,11 +43,19 @@ export function PlayersClient({
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  function load() {
-    // ✅ ВСЕ ДАННЫЕ УЖЕ ПРИШЛИ ИЗ СЕРВЕРНОГО КОМПОНЕНТА!
-    // ✅ НИКОГДА НЕ ДЕЛАЙ FETCH НА СЕБЯ ИЗ КЛИЕНТА!
-    // ✅ ЭТО ПРИЧИНА ВСЕХ 401 ОШИБОК!
-    setLoading(false);
+  async function load() {
+    try {
+      setLoading(true);
+      setMsg(null);
+      const res = await fetch("/api/players", { cache: "no-store", credentials: "include" });
+      if (!res.ok) throw new Error("Failed to load players");
+      const data = (await res.json().catch(() => ({}))) as { players?: PlayerDto[] };
+      setPlayers(data.players ?? []);
+    } catch {
+      setMsg("Ошибка обновления списка игроков");
+    } finally {
+      setLoading(false);
+    }
   }
 
   const defaultTeamId = useMemo(() => teams[0]?.id ?? "", [teams]);

@@ -19,15 +19,16 @@ export async function POST(req: Request, { params }: { params: Promise<{ teamId:
 
   if (!team) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
 
-  // Удаляем игрока из команды
-  await prisma.team.update({
-    where: { id: teamId },
-    data: {
-      members: {
-        disconnect: { id: userId }
-      }
-    }
+  // Удаляем игрока из команды (используем deleteMany для явной join-таблицы)
+  await prisma.teamMember.deleteMany({
+    where: { teamId, userId }
   });
+
+  // Если капитан вышел и в команде никого не осталось — удаляем команду
+  const remainingMembers = await prisma.teamMember.count({ where: { teamId } });
+  if (remainingMembers === 0) {
+    await prisma.team.delete({ where: { id: teamId } });
+  }
 
   return NextResponse.json({ ok: true });
 }
