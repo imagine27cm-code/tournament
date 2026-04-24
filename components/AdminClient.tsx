@@ -31,7 +31,7 @@ export function AdminClient() {
   const [busy, setBusy] = useState(false);
 
   async function load() {
-    const res = await fetch("/api/tournaments", { cache: "no-store" });
+    const res = await fetch("/api/tournaments", { cache: "no-store", credentials: "include" });
     const data = (await res.json().catch(() => ({}))) as { tournaments?: TournamentSummary[] };
     setTournaments(data.tournaments ?? []);
   }
@@ -42,8 +42,9 @@ export function AdminClient() {
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      <section className="rounded-lg border bg-white p-4 dark:bg-black">
-        <h2 className="font-semibold">Создать турнир</h2>
+      {/* Создать турнир */}
+      <section className="cyber-card rounded-lg p-4">
+        <h2 className="font-semibold" style={{color: '#00f0ff', fontFamily: "'Orbitron', sans-serif", fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Создать турнир</h2>
         <form
           className="mt-3 space-y-3"
           onSubmit={async (e) => {
@@ -53,6 +54,7 @@ export function AdminClient() {
             const res = await fetch("/api/tournaments", {
               method: "POST",
               headers: { "content-type": "application/json" },
+              credentials: "include",
               body: JSON.stringify({
                 name,
                 teamLimit,
@@ -70,56 +72,58 @@ export function AdminClient() {
           }}
         >
           <label className="block text-sm">
-            <div className="mb-1 text-zinc-600 dark:text-zinc-300">Название</div>
-            <input className="w-full rounded-md border px-3 py-2 bg-transparent" value={name} onChange={(e) => setName(e.target.value)} />
+            <div className="mb-1 text-xs" style={{color: '#8888aa'}}>Название</div>
+            <input className="cyber-input w-full rounded-md" style={{borderRadius: '4px'}} value={name} onChange={(e) => setName(e.target.value)} />
           </label>
           <label className="block text-sm">
-            <div className="mb-1 text-zinc-600 dark:text-zinc-300">Лимит команд</div>
-            <input className="w-full rounded-md border px-3 py-2 bg-transparent" type="number" min={2} max={128} value={teamLimit} onChange={(e) => setTeamLimit(parseInt(e.target.value || "8", 10))} />
+            <div className="mb-1 text-xs" style={{color: '#8888aa'}}>Лимит команд</div>
+            <input className="cyber-input w-full rounded-md" style={{borderRadius: '4px'}} type="number" min={2} max={128} value={teamLimit} onChange={(e) => setTeamLimit(parseInt(e.target.value || "8", 10))} />
           </label>
           <div className="grid grid-cols-2 gap-2">
             <label className="block text-sm">
-              <div className="mb-1 text-zinc-600 dark:text-zinc-300">Start</div>
-              <input className="w-full rounded-md border px-3 py-2 bg-transparent" type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+              <div className="mb-1 text-xs" style={{color: '#8888aa'}}>Start</div>
+              <input className="cyber-input w-full rounded-md" style={{borderRadius: '4px'}} type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
             </label>
             <label className="block text-sm">
-              <div className="mb-1 text-zinc-600 dark:text-zinc-300">End</div>
-              <input className="w-full rounded-md border px-3 py-2 bg-transparent" type="datetime-local" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              <div className="mb-1 text-xs" style={{color: '#8888aa'}}>End</div>
+              <input className="cyber-input w-full rounded-md" style={{borderRadius: '4px'}} type="datetime-local" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
             </label>
           </div>
 
-          {error ? <div className="text-sm text-red-600">{error}</div> : null}
-          <button disabled={busy} className="rounded-md bg-black px-3 py-2 text-sm text-white disabled:opacity-60 dark:bg-white dark:text-black">
+          {error ? <div className="text-xs" style={{color: '#ff0044'}}>{error}</div> : null}
+          <button disabled={busy} className="neon-button" style={{borderRadius: '4px', fontSize: '0.75rem', padding: '0.5rem 1rem'}}>
             {busy ? "..." : "Создать"}
           </button>
         </form>
-        <div className="mt-3 text-xs text-zinc-500">
+        <div className="mt-3 text-xs" style={{color: '#8888aa'}}>
           Карты: по умолчанию создаётся пул из 15 карт `Map 1..15` (можно расширить API под реальные названия).
         </div>
       </section>
 
-      <section className="rounded-lg border bg-white p-4 dark:bg-black">
+      {/* Список турниров */}
+      <section className="cyber-card rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-semibold">Турниры</h2>
-          <button className="text-sm text-zinc-600 hover:underline dark:text-zinc-300" onClick={load}>
+          <h2 className="font-semibold" style={{color: '#00f0ff', fontFamily: "'Orbitron', sans-serif", fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Турниры</h2>
+          <button className="text-sm cyber-link" onClick={load}>
             Обновить
           </button>
         </div>
 
         <div className="mt-3 space-y-2">
           {tournaments.map((t) => (
-            <div key={t.id} className="rounded-md border p-3">
+            <div key={t.id} className="rounded-md p-3" style={{border: '1px solid rgba(0, 240, 255, 0.15)', background: 'rgba(26, 26, 46, 0.6)'}}>
               <div className="flex items-center justify-between gap-3">
-                <Link href={`/tournaments/${t.id}`} className="font-medium hover:underline">
+                <Link href={`/tournaments/${t.id}`} className="font-medium text-sm hover:underline" style={{color: '#e0e0ff'}}>
                   {t.name}
                 </Link>
-                <div className="text-xs text-zinc-500">{getStatusText(t.status)}</div>
+                <div className="text-xs" style={{color: '#8888aa'}}>{getStatusText(t.status)}</div>
               </div>
               <div className="mt-2 flex gap-2">
                 <button
-                  className="rounded-md border px-3 py-1.5 text-xs hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                  className="neon-button"
+                  style={{borderRadius: '4px', padding: '0.3rem 0.7rem', fontSize: '0.65rem'}}
                   onClick={async () => {
-                    const res = await fetch(`/api/tournaments/${t.id}/start`, { method: "POST" });
+                    const res = await fetch(`/api/tournaments/${t.id}/start`, { method: "POST", credentials: "include" });
                     if (!res.ok) {
                       const d = await res.json().catch(() => ({}));
                       alert(d?.error ?? "Ошибка запуска");
@@ -138,4 +142,3 @@ export function AdminClient() {
     </div>
   );
 }
-
