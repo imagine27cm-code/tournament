@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: dark;
   /* Cyberpunk Neon Colors */
   --neon-cyan: #00f0ff;
   --neon-magenta: #ff00ff;
@@ -179,8 +180,8 @@ body::after {
   opacity: 1;
 }
 
-/* Smooth hover transitions */
-* {
+/* Smooth hover transitions — только для интерактивных элементов, не для * */
+a, button, input, select, textarea, [class*="hover"], [class*="cyber"] {
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease, transform 0.2s ease;
 }
 
