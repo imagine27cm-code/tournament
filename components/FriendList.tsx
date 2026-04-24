@@ -8,6 +8,7 @@ type Friend = {
   id: string;
   email: string;
   name: string | null;
+  online: boolean;
 };
 
 type TeamMember = {
@@ -151,8 +152,11 @@ function FriendListInner() {
               >
                 <div
                   className="h-2 w-2 shrink-0 rounded-full"
-                  style={{ background: "#00ff88", boxShadow: "0 0 6px #00ff88" }}
-                  title="Онлайн"
+                  style={{
+                    background: friend.online ? "#00ff88" : "#ff0044",
+                    boxShadow: friend.online ? "0 0 6px #00ff88" : "0 0 4px #ff004440",
+                  }}
+                  title={friend.online ? "Онлайн" : "Оффлайн"}
                 />
                 <Link href={`/profile/${friend.id}`} className="flex-1 truncate">
                   <div className="text-xs font-medium" style={{ color: "#e0e0ff" }}>

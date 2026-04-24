@@ -8,9 +8,9 @@ export async function GET(req: Request) {
     const me = session.user!.id;
 
     const rows = await prisma.$queryRaw<
-      Array<{ id: string; email: string; name: string | null }>
+      Array<{ id: string; email: string; name: string | null; online: boolean }>
     >`
-      SELECT u.id, u.email, u.name
+      SELECT u.id, u.email, u.name, (u."lastActivityAt" > NOW() - INTERVAL '5 minutes') AS online
       FROM "User" u
       JOIN "FriendRequest" fr
         ON (
