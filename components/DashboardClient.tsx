@@ -36,7 +36,7 @@ export function DashboardClient({ role, userId }: Props) {
   async function load() {
     setLoading(true);
     setError(null);
-    const res = await fetch("/api/teams", { cache: "no-store" });
+    const res = await fetch("/api/teams", { cache: "no-store", credentials: "include" });
     const data = (await res.json().catch(() => ({}))) as { teams?: TeamDto[] };
     setTeams(data.teams ?? []);
     setLoading(false);

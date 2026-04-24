@@ -1,7 +1,12 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { getToken } from "next-auth/jwt";
+import { getToken, decode } from "next-auth/jwt";
 import { type NextRequest } from "next/server";
+
+function getCookieValue(cookieHeader: string, name: string): string | undefined {
+  const match = cookieHeader.match(new RegExp(`(?:^|; )${name}=([^;]+)`));
+  return match ? decodeURIComponent(match[1]) : undefined;
+}
 
 // ✅ ЕДИНСТВЕННОЕ РАБОЧЕЕ РЕШЕНИЕ ДЛЯ NEXT AUTH v5
 export async function requireSession(req?: NextRequest | Request) {
@@ -32,6 +37,39 @@ export async function requireSession(req?: NextRequest | Request) {
           },
           expires: token.exp ? new Date(token.exp * 1000).toISOString() : new Date(Date.now() + 86400000).toISOString(),
         };
+      }
+
+      // Попытка 4: ручное чтение cookie через decode (если getToken не сработал)
+      if (!session?.user?.id) {
+        const cookieHeader = req.headers.get("cookie") || "";
+        const possibleNames = [
+          "__Secure-authjs.session-token",
+          "authjs.session-token",
+          "__Secure-next-auth.session-token",
+          "next-auth.session-token",
+        ];
+        for (const name of possibleNames) {
+          const jwtValue = getCookieValue(cookieHeader, name);
+          if (jwtValue) {
+            const decoded = await decode({
+              token: jwtValue,
+              secret: process.env.NEXTAUTH_SECRET!,
+              salt: name,
+            });
+            if (decoded?.uid) {
+              session = {
+                user: {
+                  id: decoded.uid as string,
+                  email: decoded.email as string,
+                  name: decoded.name as string | null | undefined,
+                  role: decoded.role as "PLAYER" | "ADMIN",
+                },
+                expires: decoded.exp ? new Date(decoded.exp * 1000).toISOString() : new Date(Date.now() + 86400000).toISOString(),
+              };
+              break;
+            }
+          }
+        }
       }
     }
 

@@ -13,8 +13,8 @@ export async function POST(
 
     const changed = await prisma.$executeRaw`
       UPDATE "FriendRequest"
-      SET status='ACCEPTED', updatedAt=CURRENT_TIMESTAMP
-      WHERE id=${id} AND toUserId=${me} AND status='PENDING'
+      SET status='ACCEPTED', "updatedAt"=CURRENT_TIMESTAMP
+      WHERE id=${id} AND "toUserId"=${me} AND status='PENDING'
     `;
 
     if (changed === 0) {
