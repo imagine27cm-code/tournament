@@ -7,6 +7,29 @@ const RegisterSchema = z.object({
   teamId: z.string().min(1),
 });
 
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const session = await requireSession(req);
+    if (session.user!.role !== "ADMIN") {
+      return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
+    }
+    const { id: tournamentId } = await params;
+
+    const registrations = await prisma.tournamentRegistration.findMany({
+      where: { tournamentId },
+      include: { team: { select: { id: true, name: true, captainId: true } } },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json({ registrations });
+  } catch {
+    return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+  }
+}
+
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
