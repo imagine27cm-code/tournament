@@ -51,6 +51,9 @@ export default function RootLayout({
                   <Link href="/players" className="hover:text-white transition-colors">
                     ИГРОКИ
                   </Link>
+                  <Link href="/stats" className="hover:text-white transition-colors">
+                    СТАТИСТИКА
+                  </Link>
                 </nav>
               </div>
               <div className="flex items-center gap-5">
