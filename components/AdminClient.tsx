@@ -21,6 +21,12 @@ function getStatusText(status: string): string {
   return map[status] ?? status;
 }
 
+type Registration = {
+  id: string;
+  status: string;
+  team: { id: string; name: string };
+};
+
 export function AdminClient() {
   const [tournaments, setTournaments] = useState<TournamentSummary[]>([]);
   const [name, setName] = useState("Тестовый турнир");
@@ -29,11 +35,36 @@ export function AdminClient() {
   const [endDate, setEndDate] = useState(() => new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 16));
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [selectedTournamentId, setSelectedTournamentId] = useState<string | null>(null);
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
 
   async function load() {
     const res = await fetch("/api/tournaments", { cache: "no-store", credentials: "include" });
     const data = (await res.json().catch(() => ({}))) as { tournaments?: TournamentSummary[] };
     setTournaments(data.tournaments ?? []);
+  }
+
+  async function loadRegistrations(tournamentId: string) {
+    const res = await fetch(`/api/tournaments/${tournamentId}/registrations`, { cache: "no-store", credentials: "include" });
+    const data = (await res.json().catch(() => ({}))) as { registrations?: Registration[] };
+    setRegistrations(data.registrations ?? []);
+    setSelectedTournamentId(tournamentId);
+  }
+
+  async function updateRegistration(tournamentId: string, regId: string, status: "APPROVED" | "REJECTED") {
+    const res = await fetch(`/api/tournaments/${tournamentId}/registrations/${regId}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ status }),
+    });
+    if (res.ok) {
+      await loadRegistrations(tournamentId);
+      await load();
+    } else {
+      const d = await res.json().catch(() => ({}));
+      alert(d?.error ?? "Ошибка");
+    }
   }
 
   useEffect(() => {
@@ -138,6 +169,69 @@ export function AdminClient() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Заявки на турниры */}
+      <section className="cyber-card rounded-lg p-4 lg:col-span-2">
+        <h2 className="font-semibold" style={{color: '#00f0ff', fontFamily: "'Orbitron', sans-serif", fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Заявки на турниры</h2>
+        <div className="mt-3">
+          <select
+            className="cyber-input rounded-md text-sm"
+            style={{borderRadius: '4px', padding: '0.5rem'}}
+            value={selectedTournamentId ?? ""}
+            onChange={(e) => {
+              const id = e.target.value;
+              if (id) loadRegistrations(id);
+              else { setSelectedTournamentId(null); setRegistrations([]); }
+            }}
+          >
+            <option value="">Выберите турнир...</option>
+            {tournaments.map((t) => (
+              <option key={t.id} value={t.id}>{t.name} — {getStatusText(t.status)}</option>
+            ))}
+          </select>
+        </div>
+
+        {selectedTournamentId && (
+          <div className="mt-3 space-y-2">
+            {registrations.length === 0 ? (
+              <div className="text-xs" style={{color: '#8888aa'}}>Нет заявок на этот турнир.</div>
+            ) : (
+              registrations.map((r) => (
+                <div key={r.id} className="flex items-center justify-between rounded-md p-2" style={{border: '1px solid rgba(0, 240, 255, 0.1)', background: 'rgba(26, 26, 46, 0.5)'}}>
+                  <div className="text-xs" style={{color: '#e0e0ff'}}>
+                    {r.team.name}
+                    <span className="ml-2 text-[10px]" style={{
+                      color: r.status === 'APPROVED' ? '#00ff88' : r.status === 'REJECTED' ? '#ff0044' : '#ffff00'
+                    }}>
+                      ({r.status})
+                    </span>
+                  </div>
+                  <div className="flex gap-1">
+                    {r.status === 'PENDING' && (
+                      <>
+                        <button
+                          className="rounded px-2 py-1 text-[10px]"
+                          style={{background: '#00ff8830', color: '#00ff88', border: '1px solid #00ff8850'}}
+                          onClick={() => updateRegistration(selectedTournamentId, r.id, 'APPROVED')}
+                        >
+                          Одобрить
+                        </button>
+                        <button
+                          className="rounded px-2 py-1 text-[10px]"
+                          style={{background: '#ff004430', color: '#ff0044', border: '1px solid #ff004450'}}
+                          onClick={() => updateRegistration(selectedTournamentId, r.id, 'REJECTED')}
+                        >
+                          Отклонить
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </section>
     </div>
   );
