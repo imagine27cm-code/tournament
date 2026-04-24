@@ -58,10 +58,8 @@ export default function RootLayout({
               </div>
             </div>
           </header>
-          <div className="flex flex-1">
-            <main className="flex-1">{children}</main>
-            <FriendList />
-          </div>
+          <main className="flex-1 pr-64">{children}</main>
+          <FriendList />
         </Providers>
       </body>
     </html>
