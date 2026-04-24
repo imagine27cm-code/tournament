@@ -36,7 +36,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" crossOrigin="anonymous" />
       </head>
-      <body className="min-h-full flex flex-col" style={{background: 'var(--background)'}}>
+      <body className="min-h-full flex flex-col overflow-x-hidden" style={{background: 'var(--background)'}}>
         <Providers>
           <header className="border-b" style={{borderColor: 'rgba(122, 64, 255, 0.2)', background: 'rgba(22, 22, 35, 0.95)', backdropFilter: 'blur(15px)'}}>
             <div className="mx-auto flex items-center justify-between px-6 py-4" style={{maxWidth: '100%'}}>
@@ -58,7 +58,7 @@ export default function RootLayout({
               </div>
             </div>
           </header>
-          <main className="flex-1 pr-64">{children}</main>
+          <main className="flex-1" style={{ paddingRight: 'clamp(0px, 0px, 16rem)' }}>{children}</main>
           <FriendList />
         </Providers>
       </body>
