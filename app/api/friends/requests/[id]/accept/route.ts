@@ -3,11 +3,11 @@ import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/guards";
 
 export async function POST(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await requireSession();
+    const session = await requireSession(req);
     const me = session.user!.id;
     const { id } = await params;
 

@@ -14,7 +14,7 @@ export async function POST(
   { params }: { params: Promise<{ teamId: string }> },
 ) {
   try {
-    const session = await requireSession();
+    const session = await requireSession(req);
     const userId = session.user!.id;
     const { teamId } = await params;
 

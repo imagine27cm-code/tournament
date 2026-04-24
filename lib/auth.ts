@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   debug: process.env.NODE_ENV === "development",
+  trustHost: true,
+  secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" as const },
   providers: [
     CredentialsProvider({
@@ -48,6 +50,17 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
         session.user.role = token.role;
       }
       return session;
+    },
+  },
+  cookies: {
+    sessionToken: {
+      name: "__Secure-next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
     },
   },
   pages: {

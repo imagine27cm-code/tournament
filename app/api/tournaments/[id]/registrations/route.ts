@@ -12,7 +12,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await requireSession();
+    const session = await requireSession(req);
     const userId = session.user!.id;
     const { id: tournamentId } = await params;
 

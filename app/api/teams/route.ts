@@ -8,9 +8,9 @@ const CreateTeamSchema = z.object({
   logoUrl: z.string().url().optional(),
 });
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const session = await requireSession();
+    const session = await requireSession(req);
     const userId = session.user!.id;
 
     const teams = await prisma.team.findMany({
@@ -26,7 +26,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const session = await requireSession();
+    const session = await requireSession(req);
     const userId = session.user!.id;
 
     const body = await req.json().catch(() => null);

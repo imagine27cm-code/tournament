@@ -7,9 +7,9 @@ const SendFriendRequestSchema = z.object({
   toUserId: z.string().min(1),
 });
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const session = await requireSession();
+    const session = await requireSession(req);
     const me = session.user!.id;
 
     const incoming = await prisma.$queryRaw<
@@ -30,7 +30,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const session = await requireSession();
+    const session = await requireSession(req);
     const me = session.user!.id;
     const body = await req.json().catch(() => null);
     const parsed = SendFriendRequestSchema.safeParse(body);

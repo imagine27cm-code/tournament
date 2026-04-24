@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireSession } from "@/lib/guards";
 import { prisma } from "@/lib/prisma";
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ teamId: string; memberId: string }> }) {
-  const session = await auth();
+  const session = await requireSession(req);
   if (!session?.user?.id) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
 
   const { teamId, memberId } = await params;
