@@ -150,21 +150,43 @@ export function AdminClient() {
                 <div className="text-xs" style={{color: '#8888aa'}}>{getStatusText(t.status)}</div>
               </div>
               <div className="mt-2 flex gap-2">
-                <button
-                  className="neon-button"
-                  style={{borderRadius: '4px', padding: '0.3rem 0.7rem', fontSize: '0.65rem'}}
-                  onClick={async () => {
-                    const res = await fetch(`/api/tournaments/${t.id}/start`, { method: "POST", credentials: "include" });
-                    if (!res.ok) {
-                      const d = await res.json().catch(() => ({}));
-                      alert(d?.error ?? "Ошибка запуска");
-                      return;
-                    }
-                    await load();
-                  }}
-                >
-                  Запустить (генерировать RR)
-                </button>
+                {t.status === "REGISTRATION" && (
+                  <button
+                    className="neon-button"
+                    style={{borderRadius: '4px', padding: '0.3rem 0.7rem', fontSize: '0.65rem'}}
+                    onClick={async () => {
+                      const res = await fetch(`/api/tournaments/${t.id}/start`, { method: "POST", credentials: "include" });
+                      if (!res.ok) {
+                        const d = await res.json().catch(() => ({}));
+                        alert(d?.error ?? "Ошибка запуска");
+                        return;
+                      }
+                      await load();
+                    }}
+                  >
+                    Запустить (генерировать RR)
+                  </button>
+                )}
+                {t.status === "ONGOING" && (
+                  <button
+                    className="neon-button-magenta"
+                    style={{borderRadius: '4px', padding: '0.3rem 0.7rem', fontSize: '0.65rem'}}
+                    onClick={async () => {
+                      if (!confirm("Завершить турнир? Будет произведён подсчёт RP и статистики.")) return;
+                      const res = await fetch(`/api/tournaments/${t.id}/complete`, { method: "POST", credentials: "include" });
+                      if (!res.ok) {
+                        const d = await res.json().catch(() => ({}));
+                        alert(d?.error ?? "Ошибка завершения");
+                        return;
+                      }
+                      const data = await res.json();
+                      alert(`Турнир завершён!\n\nТоп-3:\n` + data.standings.slice(0, 3).map((s: any, i: number) => `${i + 1}. ${s.teamName} — ${s.points} очков`).join("\n"));
+                      await load();
+                    }}
+                  >
+                    Завершить турнир
+                  </button>
+                )}
               </div>
             </div>
           ))}
