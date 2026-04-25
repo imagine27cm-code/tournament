@@ -1,7 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
+
+const SHOP_ITEMS: Record<string, {
+  id: string;
+  name: string;
+  type: string;
+  price: number;
+  value: string;
+  description: string;
+  icon: string;
+}> = {
+  NAME_RED: { id: "NAME_RED", name: "Красный ник", type: "NAMETAG_COLOR", price: 500, value: "#ff0044", description: "", icon: "🔴" },
+  NAME_GREEN: { id: "NAME_GREEN", name: "Зеленый ник", type: "NAMETAG_COLOR", price: 500, value: "#00ff88", description: "", icon: "🟢" },
+  NAME_CYAN: { id: "NAME_CYAN", name: "Циановый ник", type: "NAMETAG_COLOR", price: 750, value: "#00f0ff", description: "", icon: "🔵" },
+  NAME_PURPLE: { id: "NAME_PURPLE", name: "Фиолетовый ник", type: "NAMETAG_COLOR", price: 750, value: "#7a40ff", description: "", icon: "🟣" },
+  NAME_GOLD: { id: "NAME_GOLD", name: "Золотой ник", type: "NAMETAG_COLOR", price: 2000, value: "#ffc800", description: "", icon: "🥇" },
+  NAME_RAINBOW: { id: "NAME_RAINBOW", name: "Радужный ник", type: "NAMETAG_COLOR", price: 5000, value: "rainbow", description: "", icon: "🌈" },
+  BANNER_BLUE: { id: "BANNER_BLUE", name: "Синий баннер", type: "PROFILE_BANNER", price: 300, value: "linear-gradient(135deg, #00f0ff 0%, #0066ff 100%)", description: "", icon: "🌊" },
+  BANNER_PURPLE: { id: "BANNER_PURPLE", name: "Фиолетовый баннер", type: "PROFILE_BANNER", price: 300, value: "linear-gradient(135deg, #7a40ff 0%, #ff00ff 100%)", description: "", icon: "🌌" },
+  FRAME_GOLD: { id: "FRAME_GOLD", name: "Золотая рамка", type: "AVATAR_FRAME", price: 1000, value: "#ffc800", description: "", icon: "✨" },
+  FRAME_DIAMOND: { id: "FRAME_DIAMOND", name: "Алмазная рамка", type: "AVATAR_FRAME", price: 2500, value: "#00f0ff", description: "", icon: "💎" },
+  TITLE_WARRIOR: { id: "TITLE_WARRIOR", name: "Титул Воин", type: "TITLE", price: 1500, value: "⚔️ Воин", description: "", icon: "⚔️" },
+};
+
+type InventoryItem = {
+  id: string;
+  itemId: string;
+  purchasedAt: Date;
+}
 
 type UserProfile = {
   id: string;
@@ -18,6 +47,12 @@ type UserProfile = {
     members?: { id: string; name: string | null }[];
   } | null;
   _count?: any;
+  activeNameColor: string | null;
+  activeBanner: string | null;
+  activeAvatarFrame: string | null;
+  activeTitle: string | null;
+  inventory: InventoryItem[];
+  coins: number;
 };
 
 export function ProfileClient({

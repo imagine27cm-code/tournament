@@ -18,6 +18,12 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
       wins: true,
       losses: true,
       createdAt: true,
+      activeNameColor: true,
+      activeBanner: true,
+      activeAvatarFrame: true,
+      activeTitle: true,
+      inventory: true,
+      coins: true,
     }
   });
 
