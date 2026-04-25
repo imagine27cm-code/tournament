@@ -113,6 +113,15 @@ const SHOP_ITEMS: Record<string, ShopItem> = {
     description: "Отображается перед именем",
     icon: "⚔️",
   },
+  CUSTOM_TAG: {
+    id: "CUSTOM_TAG",
+    name: "Кастомный тег",
+    type: "CUSTOM_TAG",
+    price: 10000,
+    value: "custom",
+    description: "Собственный тег рядом с ником, выбирайте любой текст и цвет",
+    icon: "🏷️",
+  },
 };
 
 export default function ShopPage() {

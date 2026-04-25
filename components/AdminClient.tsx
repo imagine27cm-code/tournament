@@ -40,6 +40,7 @@ export function AdminClient() {
   const [tournaments, setTournaments] = useState<TournamentSummary[]>([]);
   const [name, setName] = useState("Тестовый турнир");
   const [teamLimit, setTeamLimit] = useState(8);
+  const [prizePool, setPrizePool] = useState(0);
   const [startDate, setStartDate] = useState(() => new Date().toISOString().slice(0, 16));
   const [endDate, setEndDate] = useState(() => new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 16));
   const [error, setError] = useState<string | null>(null);
@@ -128,10 +129,14 @@ export function AdminClient() {
             <div className="mb-1 text-xs" style={{color: '#8888aa'}}>Название</div>
             <input className="cyber-input w-full rounded-md" style={{borderRadius: '4px'}} value={name} onChange={(e) => setName(e.target.value)} />
           </label>
-          <label className="block text-sm">
-            <div className="mb-1 text-xs" style={{color: '#8888aa'}}>Лимит команд</div>
-            <input className="cyber-input w-full rounded-md" style={{borderRadius: '4px'}} type="number" min={2} max={128} value={teamLimit} onChange={(e) => setTeamLimit(parseInt(e.target.value || "8", 10))} />
-          </label>
+           <label className="block text-sm">
+             <div className="mb-1 text-xs" style={{color: '#8888aa'}}>Лимит команд</div>
+             <input className="cyber-input w-full rounded-md" style={{borderRadius: '4px'}} type="number" min={2} max={128} value={teamLimit} onChange={(e) => setTeamLimit(parseInt(e.target.value || "8", 10))} />
+           </label>
+           <label className="block text-sm">
+             <div className="mb-1 text-xs" style={{color: '#8888aa'}}>Призовой фонд</div>
+             <input className="cyber-input w-full rounded-md" style={{borderRadius: '4px'}} type="number" min={0} value={prizePool} onChange={(e) => setPrizePool(parseInt(e.target.value || "0", 10))} />
+           </label>
           <div className="grid grid-cols-2 gap-2">
             <label className="block text-sm">
               <div className="mb-1 text-xs" style={{color: '#8888aa'}}>Start</div>
