@@ -39,7 +39,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col" style={{background: 'var(--background)'}}>
         <Providers>
           <header className="border-b" style={{borderColor: 'rgba(122, 64, 255, 0.2)', background: 'rgba(22, 22, 35, 0.95)', backdropFilter: 'blur(15px)'}}>
-            <div className="mx-auto flex items-center justify-between px-6 py-4" style={{maxWidth: '100%'}}>
+            <div className="mx-auto flex items-center justify-center px-6 py-4" style={{maxWidth: '100%', gap: '4rem'}}>
               <div className="flex items-center gap-8">
                 <Link href="/" className="font-bold tracking-wider uppercase" style={{fontFamily: "'Rajdhani', sans-serif", fontSize: '1.1rem', color: '#ffffff', letterSpacing: '1px'}}>
                   ИГРАТЬ
