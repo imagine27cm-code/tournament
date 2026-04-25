@@ -174,10 +174,49 @@ export default function ShopPage() {
         {Object.values(SHOP_ITEMS).map((item) => {
           const owned = inventory.includes(item.id);
 
+          let cardStyle: React.CSSProperties = {
+            border: '1px solid rgba(122, 64, 255, 0.2)',
+            opacity: owned ? 0.6 : 1,
+            position: 'relative',
+            overflow: 'hidden',
+          };
+
+          let nameStyle: React.CSSProperties = {
+            color: '#e0e0ff',
+          };
+
+          if (item.type === "NAMETAG_COLOR") {
+            nameStyle.color = item.value;
+            if (item.value === "rainbow") {
+              nameStyle.background = 'linear-gradient(90deg, #ff0000, #ff9900, #ffff00, #00ff00, #0099ff, #9900ff)';
+              nameStyle.backgroundClip = 'text';
+              nameStyle.WebkitBackgroundClip = 'text';
+              nameStyle.color = 'transparent';
+              nameStyle.animation = 'rainbow 2s linear infinite';
+            }
+          }
+
+          if (item.type === "PROFILE_BANNER") {
+            cardStyle.background = item.value;
+          }
+
+          if (item.id === "FRAME_DIAMOND") {
+            cardStyle.border = '2px solid #00f0ff';
+            cardStyle.boxShadow = '0 0 15px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(0, 240, 255, 0.1)';
+          }
+
+          if (item.id === "FRAME_GOLD") {
+            cardStyle.border = '2px solid #ffc800';
+            cardStyle.boxShadow = '0 0 15px rgba(255, 200, 0, 0.3), inset 0 0 10px rgba(255, 200, 0, 0.1)';
+          }
+
+          if (item.id === "NAME_GOLD") {
+            cardStyle.border = '2px solid #ffc800';
+          }
+
           return (
-            <div key={item.id} className="cyber-card rounded-lg p-5" style={{border: '1px solid rgba(122, 64, 255, 0.2)', opacity: owned ? 0.6 : 1}}>
-              <div className="text-4xl mb-3">{item.icon}</div>
-              <h3 className="text-xl font-semibold mb-1" style={{color: '#e0e0ff'}}>{item.name}</h3>
+            <div key={item.id} className="cyber-card rounded-lg p-5" style={cardStyle}>
+              <h3 className="text-xl font-semibold mb-1" style={nameStyle}>{item.name}</h3>
               <p className="text-sm mb-4" style={{color: '#8888aa'}}>{item.description}</p>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
@@ -202,6 +241,13 @@ export default function ShopPage() {
           );
         })}
       </div>
+
+      <style jsx>{`
+        @keyframes rainbow {
+          0% { filter: hue-rotate(0deg); }
+          100% { filter: hue-rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }
