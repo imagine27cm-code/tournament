@@ -247,6 +247,75 @@ export function ProfileClient({
         )}
       </div>
 
+      {/* Инвентарь */}
+      {isOwner && user.inventory.length > 0 && (
+        <div className="cyber-card rounded-xl p-6">
+          <div className="text-xs mb-4" style={{ color: '#8888aa' }}>ИНВЕНТАРЬ</div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {user.inventory.map((item) => {
+              const config = SHOP_ITEMS[item.itemId];
+              if (!config) return null;
+
+              const isActive = 
+                config.type === 'NAMETAG_COLOR' && user.activeNameColor === item.itemId ||
+                config.type === 'PROFILE_BANNER' && user.activeBanner === item.itemId ||
+                config.type === 'AVATAR_FRAME' && user.activeAvatarFrame === item.itemId ||
+                config.type === 'TITLE' && user.activeTitle === item.itemId;
+
+              async function equip() {
+                try {
+                  setLoading(true);
+                  const res = await fetch('/api/shop/equip', {
+                    method: 'POST',
+                    headers: { 'content-type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ 
+                      itemId: item.itemId,
+                      action: isActive ? 'unequip' : 'equip'
+                    })
+                  });
+
+                  if (res.ok) {
+                    toast.success(isActive ? 'Предмет снят' : 'Предмет надет');
+                    window.location.reload();
+                  }
+                } catch {
+                  toast.error('Ошибка');
+                } finally {
+                  setLoading(false);
+                }
+              }
+
+              return (
+                <div 
+                  key={item.id} 
+                  className="p-4 rounded-lg" 
+                  style={{ 
+                    background: isActive ? 'rgba(0, 255, 136, 0.1)' : 'rgba(122, 64, 255, 0.05)',
+                    border: isActive ? '1px solid #00ff88' : '1px solid rgba(122, 64, 255, 0.2)'
+                  }}
+                >
+                  <div className="mb-2">
+                    <span className="text-2xl">{config.icon}</span>
+                  </div>
+                  <div className="font-semibold" style={{ color: config.type === 'NAMETAG_COLOR' ? config.value : '#e0e0ff' }}>
+                    {config.name}
+                  </div>
+                  <button
+                    className="mt-3 text-xs neon-button w-full"
+                    style={{ padding: '0.3rem 0.6rem' }}
+                    onClick={equip}
+                    disabled={loading}
+                  >
+                    {isActive ? 'Снять' : 'Надеть'}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
