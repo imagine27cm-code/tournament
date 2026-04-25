@@ -11,7 +11,7 @@ export async function GET() {
 
     return NextResponse.json({ news });
   } catch {
-    return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
+    return NextResponse.json({ news: [] });
   }
 }
 

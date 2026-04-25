@@ -34,8 +34,8 @@ export default function Home() {
     async function load() {
       try {
         const [tRes, nRes] = await Promise.all([
-          fetch("/api/tournaments", { cache: "no-store" }),
-          fetch("/api/news", { cache: "no-store" }),
+          fetch("/api/tournaments", { cache: "no-store", credentials: "include" }),
+          fetch("/api/news", { cache: "no-store", credentials: "include" }),
         ]);
         const tData = await tRes.json();
         const nData = await nRes.json();
