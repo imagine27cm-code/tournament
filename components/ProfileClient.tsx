@@ -120,11 +120,23 @@ export function ProfileClient({
   return (
     <div className="space-y-6">
       {/* Карточка профиля */}
-      <div className="cyber-card rounded-xl p-6">
+      <div className="cyber-card rounded-xl p-6" style={{
+        background: user.activeBanner && SHOP_ITEMS[user.activeBanner] 
+          ? SHOP_ITEMS[user.activeBanner].value 
+          : undefined
+      }}>
         <div className="flex flex-wrap gap-6 items-start">
           <div
             className="w-24 h-24 rounded-xl flex items-center justify-center text-3xl font-bold"
-            style={{ background: 'linear-gradient(135deg, #7a40ff 0%, #00f0ff 100%)', color: '#fff' }}
+            style={{ 
+              background: user.activeAvatarFrame && SHOP_ITEMS[user.activeAvatarFrame]
+                ? SHOP_ITEMS[user.activeAvatarFrame].value
+                : 'linear-gradient(135deg, #7a40ff 0%, #00f0ff 100%)', 
+              color: '#fff',
+              boxShadow: user.activeAvatarFrame ? `0 0 12px ${SHOP_ITEMS[user.activeAvatarFrame].value}` : undefined,
+              border: user.activeAvatarFrame ? '2px solid' : undefined,
+              borderColor: user.activeAvatarFrame && SHOP_ITEMS[user.activeAvatarFrame] ? SHOP_ITEMS[user.activeAvatarFrame].value : undefined
+            }}
           >
             {(user.name ?? "A")[0].toUpperCase()}
           </div>
@@ -132,8 +144,22 @@ export function ProfileClient({
           <div className="flex-1 min-w-0">
             <h1
               className="text-2xl font-bold"
-              style={{ color: '#ffffff', fontFamily: "'Rajdhani', sans-serif" }}
+              style={{ 
+                fontFamily: "'Rajdhani', sans-serif",
+                color: user.activeNameColor && SHOP_ITEMS[user.activeNameColor]
+                  ? SHOP_ITEMS[user.activeNameColor].value
+                  : '#ffffff',
+                textShadow: user.activeNameColor === 'NAME_RAINBOW' 
+                  ? '0 0 10px rgba(255,255,255,0.5)' 
+                  : user.activeNameColor 
+                    ? `0 0 8px ${SHOP_ITEMS[user.activeNameColor].value}` 
+                    : undefined
+              }}
             >
+              {user.activeTitle && SHOP_ITEMS[user.activeTitle] 
+                ? `${SHOP_ITEMS[user.activeTitle].value} ` 
+                : ''
+              }
               {user.name ?? "Без имени"}
             </h1>
 
