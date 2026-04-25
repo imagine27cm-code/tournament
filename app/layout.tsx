@@ -44,17 +44,20 @@ export default function RootLayout({
                 <Link href="/" className="font-bold tracking-wider uppercase" style={{fontFamily: "'Rajdhani', sans-serif", fontSize: '1.1rem', color: '#ffffff', letterSpacing: '1px'}}>
                   ИГРАТЬ
                 </Link>
-                <nav className="text-sm flex items-center gap-7" style={{color: '#aaaacc', fontFamily: "'Rajdhani', sans-serif", fontSize: '1rem', fontWeight: 500}}>
-                  <Link href="/dashboard" className="hover:text-white transition-colors">
-                    КАБИНЕТ
-                  </Link>
-                  <Link href="/players" className="hover:text-white transition-colors">
-                    ИГРОКИ
-                  </Link>
-                  <Link href="/stats" className="hover:text-white transition-colors">
-                    СТАТИСТИКА
-                  </Link>
-                </nav>
+                 <nav className="text-sm flex items-center gap-7" style={{color: '#aaaacc', fontFamily: "'Rajdhani', sans-serif", fontSize: '1rem', fontWeight: 500}}>
+                   <Link href="/dashboard" className="hover:text-white transition-colors">
+                     КАБИНЕТ
+                   </Link>
+                   <Link href="/players" className="hover:text-white transition-colors">
+                     ИГРОКИ
+                   </Link>
+                   <Link href="/stats" className="hover:text-white transition-colors">
+                     СТАТИСТИКА
+                   </Link>
+                   <Link href="/shop" className="hover:text-white transition-colors">
+                     МАГАЗИН
+                   </Link>
+                 </nav>
               </div>
               <div className="flex items-center gap-5">
                 <AuthStatus />

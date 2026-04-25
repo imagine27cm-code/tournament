@@ -20,20 +20,16 @@ export function AuthStatus() {
     );
   }
 
-  return (
-    <div className="flex items-center gap-3 text-sm">
-      <span style={{color: '#8888aa', fontSize: '0.85rem'}}>
-        <Link href={`/profile/${data.user.id}`} style={{ color: '#00f0ff' }}>{data.user.name ?? 'Профиль'}</Link>
-        {' '}
-        (<span style={{color: '#7a40ff'}}>{data.user.role}</span>)
-      </span>
-      <button
-        onClick={() => signOut({ callbackUrl: "/" })}
-        className="neon-button"
-        style={{padding: '0.4rem 1rem', fontSize: '0.8rem'}}
-      >
-        Выйти
-      </button>
-    </div>
-  );
+   return (
+     <div className="flex items-center gap-4 text-sm">
+       <Link href={`/profile/${data.user.id}`} style={{ color: '#00f0ff', fontSize: '0.95rem' }}>{data.user.name ?? 'Профиль'}</Link>
+       <button
+         onClick={() => signOut({ callbackUrl: "/" })}
+         className="neon-button"
+         style={{padding: '0.4rem 1rem', fontSize: '0.8rem'}}
+       >
+         Выйти
+       </button>
+     </div>
+   );
 }
