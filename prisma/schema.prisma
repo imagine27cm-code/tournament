@@ -120,6 +120,17 @@ model TournamentMap {
   @@index([tournamentId])
 }
 
+model News {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  tag       String   @default("INFO")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdAt])
+}
+
 model TournamentRegistration {
   id           String             @id @default(cuid())
   tournamentId String

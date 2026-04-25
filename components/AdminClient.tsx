@@ -27,6 +27,14 @@ type Registration = {
   team: { id: string; name: string };
 };
 
+type News = {
+  id: string;
+  title: string;
+  content: string;
+  tag: string;
+  createdAt: string;
+};
+
 export function AdminClient() {
   const [tournaments, setTournaments] = useState<TournamentSummary[]>([]);
   const [name, setName] = useState("Тестовый турнир");
@@ -37,6 +45,18 @@ export function AdminClient() {
   const [busy, setBusy] = useState(false);
   const [selectedTournamentId, setSelectedTournamentId] = useState<string | null>(null);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
+
+  // Новости
+  const [newsList, setNewsList] = useState<News[]>([]);
+  const [newNewsTitle, setNewNewsTitle] = useState("");
+  const [newNewsContent, setNewNewsContent] = useState("");
+  const [newNewsTag, setNewNewsTag] = useState("NEW");
+
+  async function loadNews() {
+    const res = await fetch("/api/news", { cache: "no-store", credentials: "include" });
+    const data = (await res.json().catch(() => ({}))) as { news?: News[] };
+    setNewsList(data.news ?? []);
+  }
 
   async function load() {
     const res = await fetch("/api/tournaments", { cache: "no-store", credentials: "include" });
@@ -69,6 +89,7 @@ export function AdminClient() {
 
   useEffect(() => {
     load();
+    loadNews();
   }, []);
 
   return (
@@ -270,6 +291,89 @@ export function AdminClient() {
             )}
           </div>
         )}
+      </section>
+
+      {/* Управление новостями */}
+      <section className="cyber-card rounded-lg p-4 lg:col-span-2">
+        <h2 className="font-semibold" style={{color: '#ff00ff', fontFamily: "'Orbitron', sans-serif", fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px'}}>УПРАВЛЕНИЕ НОВОСТЯМИ</h2>
+
+        <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Форма добавить / редактировать */}
+          <div className="space-y-3">
+            <input
+              className="cyber-input w-full rounded-md"
+              placeholder="Заголовок новости"
+              value={newNewsTitle}
+              onChange={(e) => setNewNewsTitle(e.target.value)}
+            />
+            <textarea
+              className="cyber-input w-full rounded-md min-h-[120px]"
+              placeholder="Текст новости"
+              value={newNewsContent}
+              onChange={(e) => setNewNewsContent(e.target.value)}
+            />
+            <select
+              className="cyber-input w-full rounded-md"
+              value={newNewsTag}
+              onChange={(e) => setNewNewsTag(e.target.value)}
+            >
+              <option value="NEW">🔥 НОВОЕ</option>
+              <option value="UPDATE">✅ ОБНОВЛЕНИЕ</option>
+              <option value="INFO">ℹ️ ИНФО</option>
+            </select>
+            <button
+              className="neon-button-magenta w-full rounded-md"
+              style={{borderRadius: '4px', padding: '0.5rem'}}
+              onClick={async () => {
+                if (!newNewsTitle.trim() || !newNewsContent.trim()) return;
+                await fetch("/api/news", {
+                  method: "POST",
+                  headers: { "content-type": "application/json" },
+                  credentials: "include",
+                  body: JSON.stringify({
+                    title: newNewsTitle,
+                    content: newNewsContent,
+                    tag: newNewsTag,
+                  }),
+                });
+                setNewNewsTitle("");
+                setNewNewsContent("");
+                setNewNewsTag("NEW");
+                await loadNews();
+              }}
+            >
+              Добавить новость
+            </button>
+          </div>
+
+          {/* Список новостей */}
+          <div className="space-y-2 max-h-[300px] overflow-y-auto">
+            {newsList.map((n) => (
+              <div key={n.id} className="rounded-md p-3" style={{border: '1px solid rgba(255, 0, 255, 0.15)', background: 'rgba(30, 30, 48, 0.6)'}}>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="text-sm font-medium" style={{color: '#e0e0ff'}}>{n.title}</div>
+                    <div className="text-[10px] mt-1" style={{color: '#8888aa'}}>{n.tag} — {new Date(n.createdAt).toLocaleDateString()}</div>
+                  </div>
+                  <button
+                    className="text-[10px] px-2 py-0.5 rounded"
+                    style={{background: '#ff004430', color: '#ff0044', border: '1px solid #ff004450'}}
+                    onClick={async () => {
+                      if (!confirm("Удалить новость?")) return;
+                      await fetch(`/api/news/${n.id}`, {
+                        method: "DELETE",
+                        credentials: "include",
+                      });
+                      await loadNews();
+                    }}
+                  >
+                    Удалить
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
     </div>
   );

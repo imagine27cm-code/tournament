@@ -12,8 +12,17 @@ type TournamentSummary = {
   teamLimit: number;
 };
 
+type News = {
+  id: string;
+  title: string;
+  content: string;
+  tag: string;
+  createdAt: string;
+};
+
 export default function Home() {
   const [tournaments, setTournaments] = useState<TournamentSummary[]>([]);
+  const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("ALL");
 
@@ -24,11 +33,17 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/tournaments", { cache: "no-store" });
-        const data = await res.json();
-        setTournaments(data.tournaments ?? []);
+        const [tRes, nRes] = await Promise.all([
+          fetch("/api/tournaments", { cache: "no-store" }),
+          fetch("/api/news", { cache: "no-store" }),
+        ]);
+        const tData = await tRes.json();
+        const nData = await nRes.json();
+        setTournaments(tData.tournaments ?? []);
+        setNews(nData.news ?? []);
       } catch {
         setTournaments([]);
+        setNews([]);
       } finally {
         setLoading(false);
       }
@@ -133,32 +148,31 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-6 tracking-wide" style={{fontFamily: "'Rajdhani', sans-serif", color: '#ff00ff', fontWeight: 700, textShadow: '0 0 12px #ff00ff40'}}>ПОСЛЕДНИЕ НОВОСТИ</h2>
 
         <div className="space-y-4">
-          <div className="cyber-card rounded-lg p-5" style={{border: '1px solid rgba(255, 0, 255, 0.25)', boxShadow: '0 0 15px rgba(255, 0, 255, 0.15)'}}>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="text-[10px] px-2 py-0.5 rounded" style={{background: '#ff00ff30', color: '#ff00ff', border: '1px solid #ff00ff50'}}>🔥 НОВОЕ</div>
-              <div className="text-[11px]" style={{color: '#8888aa'}}>25 апреля 2026</div>
-            </div>
-            <h3 className="text-lg font-semibold mb-1" style={{color: '#e0e0ff'}}>Рейтинговая система запущена!</h3>
-            <p className="text-sm" style={{color: '#aaaacc'}}>Теперь после каждого завершенного турнира происходит автоматический пересчет RP. Первые места получают бонусные очки, а таблица лидеров обновляется в реальном времени.</p>
-          </div>
+          {news.map((n) => {
+            const styles: Record<string, { bg: string; color: string; border: string; shadow: string }> = {
+              NEW: { bg: '#ff00ff30', color: '#ff00ff', border: '1px solid #ff00ff50', shadow: '0 0 15px rgba(255, 0, 255, 0.15)' },
+              UPDATE: { bg: '#00f0ff30', color: '#00f0ff', border: '1px solid #00f0ff50', shadow: '0 0 12px rgba(0, 240, 255, 0.1)' },
+              INFO: { bg: '#7a40ff30', color: '#7a40ff', border: '1px solid #7a40ff50', shadow: '0 0 10px rgba(122, 64, 255, 0.1)' },
+            };
+            const labels: Record<string, string> = {
+              NEW: "🔥 НОВОЕ",
+              UPDATE: "✅ ОБНОВЛЕНИЕ",
+              INFO: "ℹ️ ИНФО",
+            };
+            const style = styles[n.tag] || styles.INFO;
+            const label = labels[n.tag] || labels.INFO;
 
-          <div className="cyber-card rounded-lg p-5" style={{border: '1px solid rgba(0, 240, 255, 0.2)', boxShadow: '0 0 12px rgba(0, 240, 255, 0.1)'}}>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="text-[10px] px-2 py-0.5 rounded" style={{background: '#00f0ff30', color: '#00f0ff', border: '1px solid #00f0ff50'}}>✅ ОБНОВЛЕНИЕ</div>
-              <div className="text-[11px]" style={{color: '#8888aa'}}>24 апреля 2026</div>
-            </div>
-            <h3 className="text-lg font-semibold mb-1" style={{color: '#e0e0ff'}}>Бан система карт добавлена</h3>
-            <p className="text-sm" style={{color: '#aaaacc'}}>В каждом матче теперь работает полная система бана карт BO3. Каждая команда банит по 2 карты перед стартом матча.</p>
-          </div>
-
-          <div className="cyber-card rounded-lg p-5" style={{border: '1px solid rgba(122, 64, 255, 0.2)', boxShadow: '0 0 10px rgba(122, 64, 255, 0.1)'}}>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="text-[10px] px-2 py-0.5 rounded" style={{background: '#7a40ff30', color: '#7a40ff', border: '1px solid #7a40ff50'}}>ℹ️ ИНФО</div>
-              <div className="text-[11px]" style={{color: '#8888aa'}}>23 апреля 2026</div>
-            </div>
-            <h3 className="text-lg font-semibold mb-1" style={{color: '#e0e0ff'}}>Команды и друзья</h3>
-            <p className="text-sm" style={{color: '#aaaacc'}}>Добавлена возможность создавать команды, отправлять приглашения и добавлять игроков в друзья. Статус онлайн отображается в реальном времени.</p>
-          </div>
+            return (
+              <div key={n.id} className="cyber-card rounded-lg p-5" style={{border: style.border, boxShadow: style.shadow}}>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="text-[10px] px-2 py-0.5 rounded" style={{background: style.bg, color: style.color, border: style.border}}>{label}</div>
+                  <div className="text-[11px]" style={{color: '#8888aa'}}>{new Date(n.createdAt).toLocaleDateString()}</div>
+                </div>
+                <h3 className="text-lg font-semibold mb-1" style={{color: '#e0e0ff'}}>{n.title}</h3>
+                <p className="text-sm" style={{color: '#aaaacc'}}>{n.content}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
       
