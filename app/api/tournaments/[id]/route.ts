@@ -1,53 +1,31 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { computeStandings } from "@/lib/standings";
+import { requireAdmin } from "@/lib/guards";
 
-export async function GET(
+export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id } = await params;
+  try {
+    await requireAdmin();
+    const { id: tournamentId } = await params;
 
-  const tournament = await prisma.tournament.findUnique({
-    where: { id },
-    include: {
-      maps: { orderBy: { sortOrder: "asc" } },
-      registrations: {
-        include: { team: true },
-        orderBy: { createdAt: "asc" },
-      },
-      rounds: {
-        orderBy: { number: "asc" },
-        include: { matches: { include: { homeTeam: true, awayTeam: true }, orderBy: { id: "asc" } } },
-      },
-      matches: {
-        include: { homeTeam: true, awayTeam: true },
-      },
-    },
-  });
+    const tournament = await prisma.tournament.findUnique({
+      where: { id: tournamentId },
+    });
 
-  if (!tournament) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
+    if (!tournament) {
+      return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
+    }
 
-  const approvedTeams = tournament.registrations
-    .filter((r) => r.status === "APPROVED")
-    .map((r) => r.team);
+    await prisma.tournament.delete({
+      where: { id: tournamentId },
+    });
 
-  const standings = computeStandings(approvedTeams, tournament.matches);
-
-  return NextResponse.json({
-    tournament: {
-      id: tournament.id,
-      name: tournament.name,
-      startDate: tournament.startDate,
-      endDate: tournament.endDate,
-      status: tournament.status,
-      teamLimit: tournament.teamLimit,
-      maps: tournament.maps,
-    },
-    registrations: tournament.registrations,
-    rounds: tournament.rounds,
-    matches: tournament.matches,
-    standings,
-  });
+    return NextResponse.json({ ok: true });
+  } catch (e: unknown) {
+    const err = e as { message?: string } | null;
+    if (err?.message === "FORBIDDEN") return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
+    return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+  }
 }
-

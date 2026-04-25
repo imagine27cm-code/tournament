@@ -15,6 +15,11 @@ type TournamentSummary = {
 export default function Home() {
   const [tournaments, setTournaments] = useState<TournamentSummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("ALL");
+
+  const filteredTournaments = activeTab === "ALL"
+    ? tournaments
+    : tournaments.filter((t) => t.status === activeTab);
 
   useEffect(() => {
     async function load() {
@@ -39,6 +44,30 @@ export default function Home() {
       <h1 className="text-4xl font-bold mb-12 tracking-wide" style={{fontFamily: "'Rajdhani', sans-serif", color: '#ffffff', fontWeight: 700}}>Список ебанных турниров</h1>
       
       <div className="max-w-4xl">
+        {/* Tabs */}
+        <div className="flex gap-4 mb-6">
+          {[
+            { key: "ALL", label: "Все" },
+            { key: "REGISTRATION", label: "Предстоящие" },
+            { key: "ONGOING", label: "Активные" },
+            { key: "COMPLETED", label: "Завершенные" },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              className="px-4 py-2 rounded text-sm font-medium"
+              style={{
+                background: activeTab === tab.key ? 'rgba(122, 64, 255, 0.2)' : 'transparent',
+                color: activeTab === tab.key ? '#7a40ff' : '#8888aa',
+                border: activeTab === tab.key ? '1px solid rgba(122, 64, 255, 0.4)' : '1px solid transparent',
+                boxShadow: activeTab === tab.key ? '0 0 10px rgba(122, 64, 255, 0.15)' : 'none',
+              }}
+              onClick={() => setActiveTab(tab.key)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
         {/* Table Header */}
         <div className="grid grid-cols-4 gap-4 px-5 py-4" style={{color: '#7a88bb', fontFamily: "'Rajdhani', sans-serif", fontSize: '1.05rem', fontWeight: 50}}>
         </div>
@@ -49,12 +78,12 @@ export default function Home() {
             <div className="py-12 text-center" style={{color: '#666688', fontFamily: "'Rajdhani', sans-serif"}}>
               <p>Загрузка турниров...</p>
             </div>
-          ) : tournaments.length === 0 ? (
+          ) : filteredTournaments.length === 0 ? (
             <div className="py-12 text-center" style={{color: '#666688', fontFamily: "'Rajdhani', sans-serif"}}>
-              <p>Пока нет активных турниров</p>
+              <p>Пока нет турниров в этой категории</p>
             </div>
           ) : (
-            tournaments.map((t, index) => (
+            filteredTournaments.map((t, index) => (
               <Link
                 key={t.id}
                 href={`/tournaments/${t.id}`}

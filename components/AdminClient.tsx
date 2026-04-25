@@ -187,6 +187,22 @@ export function AdminClient() {
                     Завершить турнир
                   </button>
                 )}
+                <button
+                  className="rounded px-2 py-1 text-[10px]"
+                  style={{background: '#ff004430', color: '#ff0044', border: '1px solid #ff004450', marginLeft: 'auto'}}
+                  onClick={async () => {
+                    if (!confirm("Удалить турнир? Это действие необратимо!")) return;
+                    const res = await fetch(`/api/tournaments/${t.id}`, { method: "DELETE", credentials: "include" });
+                    if (!res.ok) {
+                      const d = await res.json().catch(() => ({}));
+                      alert(d?.error ?? "Ошибка удаления");
+                      return;
+                    }
+                    await load();
+                  }}
+                >
+                  Удалить
+                </button>
               </div>
             </div>
           ))}
