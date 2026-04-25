@@ -98,6 +98,40 @@ export default function Home() {
           )}
         </div>
       </div>
+
+      {/* === НОВОСТИ === */}
+      <div className="mt-16 max-w-4xl">
+        <h2 className="text-2xl font-bold mb-6 tracking-wide" style={{fontFamily: "'Rajdhani', sans-serif", color: '#ff00ff', fontWeight: 700, textShadow: '0 0 12px #ff00ff40'}}>ПОСЛЕДНИЕ НОВОСТИ</h2>
+
+        <div className="space-y-4">
+          <div className="cyber-card rounded-lg p-5" style={{border: '1px solid rgba(255, 0, 255, 0.25)', boxShadow: '0 0 15px rgba(255, 0, 255, 0.15)'}}>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="text-[10px] px-2 py-0.5 rounded" style={{background: '#ff00ff30', color: '#ff00ff', border: '1px solid #ff00ff50'}}>🔥 НОВОЕ</div>
+              <div className="text-[11px]" style={{color: '#8888aa'}}>25 апреля 2026</div>
+            </div>
+            <h3 className="text-lg font-semibold mb-1" style={{color: '#e0e0ff'}}>Рейтинговая система запущена!</h3>
+            <p className="text-sm" style={{color: '#aaaacc'}}>Теперь после каждого завершенного турнира происходит автоматический пересчет RP. Первые места получают бонусные очки, а таблица лидеров обновляется в реальном времени.</p>
+          </div>
+
+          <div className="cyber-card rounded-lg p-5" style={{border: '1px solid rgba(0, 240, 255, 0.2)', boxShadow: '0 0 12px rgba(0, 240, 255, 0.1)'}}>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="text-[10px] px-2 py-0.5 rounded" style={{background: '#00f0ff30', color: '#00f0ff', border: '1px solid #00f0ff50'}}>✅ ОБНОВЛЕНИЕ</div>
+              <div className="text-[11px]" style={{color: '#8888aa'}}>24 апреля 2026</div>
+            </div>
+            <h3 className="text-lg font-semibold mb-1" style={{color: '#e0e0ff'}}>Бан система карт добавлена</h3>
+            <p className="text-sm" style={{color: '#aaaacc'}}>В каждом матче теперь работает полная система бана карт BO3. Каждая команда банит по 2 карты перед стартом матча.</p>
+          </div>
+
+          <div className="cyber-card rounded-lg p-5" style={{border: '1px solid rgba(122, 64, 255, 0.2)', boxShadow: '0 0 10px rgba(122, 64, 255, 0.1)'}}>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="text-[10px] px-2 py-0.5 rounded" style={{background: '#7a40ff30', color: '#7a40ff', border: '1px solid #7a40ff50'}}>ℹ️ ИНФО</div>
+              <div className="text-[11px]" style={{color: '#8888aa'}}>23 апреля 2026</div>
+            </div>
+            <h3 className="text-lg font-semibold mb-1" style={{color: '#e0e0ff'}}>Команды и друзья</h3>
+            <p className="text-sm" style={{color: '#aaaacc'}}>Добавлена возможность создавать команды, отправлять приглашения и добавлять игроков в друзья. Статус онлайн отображается в реальном времени.</p>
+          </div>
+        </div>
+      </div>
       
     </div>
   );
