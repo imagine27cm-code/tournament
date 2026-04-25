@@ -63,3 +63,9 @@ export type AuthedUser = {
   role: "PLAYER" | "ADMIN";
   name?: string | null;
 };
+
+export async function getCurrentUser(): Promise<AuthedUser | null> {
+  const session = await auth();
+  if (!session?.user) return null;
+  return session.user as AuthedUser;
+}
