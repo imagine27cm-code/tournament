@@ -186,10 +186,6 @@ export function ProfileClient({
         )}
       </div>
 
-      {/* Уведомление */}
-      <div className="cyber-card rounded-lg p-4 text-sm" style={{ color: '#8888aa', opacity: 0.8 }}>
-        💡 При выходе капитана из команды, если в команде не остаётся больше никого - она автоматически удаляется
-      </div>
     </div>
   );
 }
