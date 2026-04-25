@@ -23,6 +23,7 @@ model User {
   winStreak              Int             @default(0)
   bestWinStreak          Int             @default(0)
   lastActivityAt         DateTime?
+  coins                  Int             @default(0)
   friendRequestsSent     FriendRequest[] @relation("FriendRequestSender")
   friendRequestsReceived FriendRequest[] @relation("FriendRequestReceiver")
   teamsCreated           Team[]          @relation("TeamCaptain")
@@ -30,6 +31,19 @@ model User {
   teamMembers            TeamMember[]
   tournamentsCreated     Tournament[]    @relation("TournamentCreator")
   achievements           Achievement[]
+  inventory              InventoryItem[]
+}
+
+model InventoryItem {
+  id          String   @id @default(cuid())
+  userId      String
+  itemId      String
+  purchasedAt DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemId])
+  @@index([userId])
 }
 
 model FriendRequest {
