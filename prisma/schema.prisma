@@ -29,6 +29,7 @@ model User {
   invitesSent            TeamInvite[]    @relation("InviteSender")
   teamMembers            TeamMember[]
   tournamentsCreated     Tournament[]    @relation("TournamentCreator")
+  achievements           Achievement[]
 }
 
 model FriendRequest {
@@ -129,6 +130,19 @@ model News {
   updatedAt DateTime @updatedAt
 
   @@index([createdAt])
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  userId      String
+  achievementType String
+  value       Int?
+  createdAt   DateTime @default(now())
+
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementType])
+  @@index([userId])
 }
 
 model TournamentRegistration {
