@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 type TournamentSummary = {
   id: string;
@@ -326,7 +327,7 @@ export function AdminClient() {
               style={{borderRadius: '4px', padding: '0.5rem'}}
               onClick={async () => {
                 if (!newNewsTitle.trim() || !newNewsContent.trim()) return;
-                await fetch("/api/news", {
+                const res = await fetch("/api/news", {
                   method: "POST",
                   headers: { "content-type": "application/json" },
                   credentials: "include",
@@ -336,10 +337,15 @@ export function AdminClient() {
                     tag: newNewsTag,
                   }),
                 });
-                setNewNewsTitle("");
-                setNewNewsContent("");
-                setNewNewsTag("NEW");
-                await loadNews();
+                if (res.ok) {
+                  toast.success("Новость добавлена!");
+                  setNewNewsTitle("");
+                  setNewNewsContent("");
+                  setNewNewsTag("NEW");
+                  await loadNews();
+                } else {
+                  toast.error("Ошибка добавления новости");
+                }
               }}
             >
               Добавить новость
