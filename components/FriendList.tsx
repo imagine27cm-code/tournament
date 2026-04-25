@@ -154,7 +154,8 @@ function FriendListInner() {
                   className="h-2 w-2 shrink-0 rounded-full"
                   style={{
                     background: friend.online ? "#00ff88" : "#ff0044",
-                    boxShadow: friend.online ? "0 0 6px #00ff88" : "0 0 4px #ff004440",
+                    boxShadow: friend.online ? "0 0 8px #00ff88" : "0 0 6px #ff004460",
+                    animation: friend.online ? "pulse-green 1.2s infinite" : "pulse-red 1.2s infinite",
                   }}
                   title={friend.online ? "Онлайн" : "Оффлайн"}
                 />

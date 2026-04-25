@@ -285,6 +285,29 @@ main > * {
   }
 }
 
+/* Online/Offline pulsing dots */
+@keyframes pulse-green {
+  0%, 100% {
+    box-shadow: 0 0 4px #00ff88, 0 0 6px #00ff8860;
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 8px #00ff88, 0 0 12px #00ff8880;
+    opacity: 0.7;
+  }
+}
+
+@keyframes pulse-red {
+  0%, 100% {
+    box-shadow: 0 0 3px #ff0044, 0 0 5px #ff004440;
+    opacity: 0.6;
+  }
+  50% {
+    box-shadow: 0 0 6px #ff0044, 0 0 10px #ff004460;
+    opacity: 0.9;
+  }
+}
+
 @keyframes scanline-move {
   0% {
     transform: translateY(-100%);

@@ -7,10 +7,18 @@ export async function GET(req: Request) {
     const session = await requireSession(req);
     const me = session.user!.id;
 
+    // Обновляем последнюю активность текущего пользователя
+    await prisma.user.update({
+      where: { id: me },
+      data: { lastActivityAt: new Date() },
+    });
+
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+
     const rows = await prisma.$queryRaw<
-      Array<{ id: string; email: string; name: string | null; online: boolean }>
+      Array<{ id: string; email: string; name: string | null; lastActivityAt: Date | null }>
     >`
-      SELECT u.id, u.email, u.name, (u."lastActivityAt" > NOW() - INTERVAL '5 minutes') AS online
+      SELECT u.id, u.email, u.name, u."lastActivityAt"
       FROM "User" u
       JOIN "FriendRequest" fr
         ON (
@@ -22,7 +30,12 @@ export async function GET(req: Request) {
       ORDER BY u.name ASC NULLS LAST
     `;
 
-    return NextResponse.json({ friends: rows });
+    const friends = rows.map((r) => ({
+      ...r,
+      online: r.lastActivityAt && new Date(r.lastActivityAt) > fiveMinutesAgo,
+    }));
+
+    return NextResponse.json({ friends });
   } catch {
     return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
   }

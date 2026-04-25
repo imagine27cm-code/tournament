@@ -77,6 +77,8 @@ model User {
   winStreak    Int      @default(0)
   bestWinStreak Int     @default(0)
 
+  lastActivityAt DateTime?
+
   teamsCreated           Team[]          @relation("TeamCaptain")
   teamMembers            TeamMember[]
   invitesSent            TeamInvite[]    @relation("InviteSender")
