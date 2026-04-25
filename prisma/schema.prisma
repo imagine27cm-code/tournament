@@ -24,6 +24,10 @@ model User {
   bestWinStreak          Int             @default(0)
   lastActivityAt         DateTime?
   coins                  Int             @default(0)
+  activeNameColor        String?
+  activeBanner           String?
+  activeAvatarFrame      String?
+  activeTitle            String?
   friendRequestsSent     FriendRequest[] @relation("FriendRequestSender")
   friendRequestsReceived FriendRequest[] @relation("FriendRequestReceiver")
   teamsCreated           Team[]          @relation("TeamCaptain")
