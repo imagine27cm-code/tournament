@@ -169,11 +169,12 @@ export default function ShopPage() {
   }
 
   return (
-    <div className="px-10 py-10">
-      <div style={{ color: '#7a40ff', fontSize: '0.7rem', opacity: 0.6, marginBottom: '1rem', fontFamily: "'Orbitron', sans-serif" }}>BUILD v1.0.2</div>
+    <div className="px-6 py-10">
       <div className="flex items-center justify-between mb-10">
-        <h1 className="text-4xl font-bold tracking-wide" style={{fontFamily: "'Rajdhani', sans-serif", color: '#ffffff', fontWeight: 700}}>МАГАЗИН</h1>
-        <div className="flex items-center gap-3 px-5 py-3 rounded-lg" style={{background: 'rgba(255, 200, 0, 0.1)', border: '1px solid rgba(255, 200, 0, 0.3)'}}>
+        <h1 className="text-4xl font-bold tracking-wide flex items-center gap-3" style={{fontFamily: "'Orbitron', sans-serif", color: '#ffffff', fontWeight: 700}}>
+          <span style={{ color: '#A6FF00' }}>▌</span> МАГАЗИН
+        </h1>
+        <div className="flex items-center gap-3 px-5 py-3 rounded-md" style={{background: '#101414', border: '1px solid #1E2A25'}}>
           <span className="text-2xl">🪙</span>
           <span className="text-xl font-bold" style={{color: '#ffc800'}}>{coins}</span>
         </div>
@@ -184,14 +185,16 @@ export default function ShopPage() {
           const owned = inventory.includes(item.id);
 
           let cardStyle: React.CSSProperties = {
-            border: '1px solid rgba(122, 64, 255, 0.2)',
+            background: '#101414',
+            border: '1px solid #1E2A25',
             opacity: owned ? 0.6 : 1,
             position: 'relative',
             overflow: 'hidden',
+            borderRadius: '2px'
           };
 
           let nameStyle: React.CSSProperties = {
-            color: '#e0e0ff',
+            color: '#ffffff',
           };
 
           if (item.type === "NAMETAG_COLOR") {
