@@ -1,6 +1,6 @@
 import { prisma } from "./prisma";
 
-type ShopItemType = "NAMETAG_COLOR" | "PROFILE_BANNER" | "AVATAR_FRAME" | "TITLE";
+type ShopItemType = "NAMETAG_COLOR" | "PROFILE_BANNER" | "AVATAR_FRAME" | "TITLE" | "CUSTOM_TAG";
 
 export const SHOP_ITEMS: Record<string, {
   id: string;
@@ -116,6 +116,17 @@ export const SHOP_ITEMS: Record<string, {
     value: "⚔️ Воин",
     description: "Отображается перед именем",
     icon: "⚔️",
+  },
+
+  // Кастомный тег
+  CUSTOM_TAG: {
+    id: "CUSTOM_TAG",
+    name: "Кастомный тег",
+    type: "CUSTOM_TAG",
+    price: 10000,
+    value: "custom",
+    description: "Собственный тег рядом с ником. Выберите любой текст и цвет",
+    icon: "🏷️",
   },
 };
 
