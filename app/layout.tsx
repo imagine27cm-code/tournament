@@ -38,26 +38,29 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col" style={{background: 'var(--background)'}}>
         <Providers>
-          <header className="border-b" style={{borderColor: 'rgba(122, 64, 255, 0.2)', background: 'rgba(22, 22, 35, 0.95)', backdropFilter: 'blur(15px)'}}>
-            <div className="mx-auto flex items-center justify-center px-6 py-4" style={{maxWidth: '100%', gap: '4rem'}}>
-              <div className="flex items-center gap-8">
-                <Link href="/" className="font-bold tracking-wider uppercase" style={{fontFamily: "'Rajdhani', sans-serif", fontSize: '1.1rem', color: '#ffffff', letterSpacing: '1px'}}>
-                  ИГРАТЬ
+          <header className="border-b" style={{borderColor: '#1E2A25', background: '#0B0F0D', backdropFilter: 'blur(15px)'}}>
+            <div className="mx-auto flex items-center justify-between px-6 py-4" style={{maxWidth: '100%'}}>
+              <div className="flex items-center gap-10">
+                <Link href="/" className="font-black tracking-wider uppercase" style={{fontFamily: "'Orbitron', sans-serif", fontSize: '1.2rem', color: '#A6FF00', letterSpacing: '2px', textShadow: '0 0 20px rgba(166, 255, 0, 0.3)'}}>
+                  WARFACE
                 </Link>
-                 <nav className="text-sm flex items-center gap-7" style={{color: '#aaaacc', fontFamily: "'Rajdhani', sans-serif", fontSize: '1rem', fontWeight: 500}}>
-                   <Link href="/dashboard" className="hover:text-white transition-colors">
-                     КАБИНЕТ
-                   </Link>
-                   <Link href="/players" className="hover:text-white transition-colors">
-                     ИГРОКИ
-                   </Link>
-                   <Link href="/stats" className="hover:text-white transition-colors">
-                     СТАТИСТИКА
-                   </Link>
-                   <Link href="/shop" className="hover:text-white transition-colors">
-                     МАГАЗИН
-                   </Link>
-                 </nav>
+                 <nav className="text-sm flex items-center gap-8" style={{color: '#8E9A94', fontFamily: "'Exo 2', sans-serif", fontSize: '1rem', fontWeight: 600}}>
+                    <Link href="/" className="hover:text-white transition-colors">
+                      ИГРАТЬ
+                    </Link>
+                    <Link href="/dashboard" className="hover:text-white transition-colors">
+                      КАБИНЕТ
+                    </Link>
+                    <Link href="/players" className="hover:text-white transition-colors">
+                      ИГРОКИ
+                    </Link>
+                    <Link href="/stats" className="hover:text-white transition-colors">
+                      СТАТИСТИКА
+                    </Link>
+                    <Link href="/shop" className="hover:text-white transition-colors">
+                      МАГАЗИН
+                    </Link>
+                  </nav>
               </div>
               <div className="flex items-center gap-5">
                 <AuthStatus />

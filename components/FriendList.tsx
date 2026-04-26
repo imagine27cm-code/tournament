@@ -110,20 +110,20 @@ function FriendListInner() {
       style={{
         height: "calc(100vh - 4rem)",
         width: "16rem",
-        borderColor: "rgba(0, 240, 255, 0.2)",
-        background: "rgba(18, 18, 31, 0.95)",
+        borderColor: "#1E2A25",
+        background: "#0B0F0D",
         backdropFilter: "blur(10px)",
       }}
     >
       <div className="p-4">
         {/* === ДРУЗЬЯ === */}
         <div className="mb-3 flex items-center justify-between">
-          <h2
+        <h2
             className="text-xs font-semibold uppercase tracking-wider"
             style={{
-              color: "#00f0ff",
+              color: "#A6FF00",
               fontFamily: "'Orbitron', sans-serif",
-              textShadow: "0 0 8px #00f0ff40",
+              textShadow: "0 0 8px rgba(166, 255, 0, 0.3)",
             }}
           >
             Друзья онлайн
@@ -145,9 +145,9 @@ function FriendListInner() {
               <li
                 key={friend.id}
                 className="flex items-center gap-2 rounded-md p-2 text-sm"
-                style={{
-                  border: "1px solid rgba(0, 240, 255, 0.15)",
-                  background: "rgba(26, 26, 46, 0.8)",
+        style={{
+                  border: "1px solid #1E2A25",
+                  background: "#101414",
                 }}
               >
                 <div
@@ -186,10 +186,10 @@ function FriendListInner() {
                 <li
                   key={inv.id}
                   className="rounded-md p-2"
-                  style={{
-                    border: "1px solid rgba(255, 0, 255, 0.25)",
-                    background: "rgba(46, 26, 46, 0.6)",
-                  }}
+        style={{
+                border: "1px solid #1E2A25",
+                background: "#101414",
+              }}
                 >
                   <div className="text-xs" style={{ color: "#e0e0ff" }}>
                     {inv.team.name}
@@ -227,10 +227,10 @@ function FriendListInner() {
             </div>
             <div
               className="mb-2 rounded-md p-2 text-sm font-medium"
-              style={{
-                border: "1px solid rgba(0, 240, 255, 0.2)",
-                background: "rgba(26, 26, 46, 0.8)",
-                color: "#e0e0ff",
+        style={{
+                border: "1px solid #1E2A25",
+                background: "#101414",
+                color: "#ffffff",
               }}
             >
               {myTeam.name}
@@ -258,7 +258,7 @@ function FriendListInner() {
             </ul>
             <button
               className="w-full rounded-md py-1.5 text-[10px] uppercase tracking-wider"
-              style={{
+        style={{
                 background: "rgba(255, 0, 68, 0.15)",
                 color: "#ff0044",
                 border: "1px solid rgba(255, 0, 68, 0.3)",
