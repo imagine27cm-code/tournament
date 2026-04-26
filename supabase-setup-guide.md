@@ -12,7 +12,7 @@
 4.  Выберите организацию (можно создать бесплатную)
 5.  Заполните поля проекта:
     -   Имя проекта: `tourney`
-    -   Пароль базы данных (7EXGViGVMjSMGwSk!)
+    -   Пароль базы данных (7EXGViGVMjSMGwSk)
     -   Регион: выберите ближайший к вам (например `Frankfurt` для Европы)
     -   Нажмите **Create new project**
 
@@ -27,7 +27,7 @@
 
 2.  Скопируйте строку подключения и вставьте в файл `.env` вашего проекта:
     ```env
-    DATABASE_URL="postgresql://postgres:[ВАШ_ПАРОЛЬ]@db.[АЙДИ_ПРОЕКТА].supabase.co:5432/postgres"
+    DATABASE_URL="postgresql://postgres:[7EXGViGVMjSMGwSk]@db..fuwcvahhdsesyljmimio.supabase.co:5432/postgres"
     ```
 
 3.  Обновите `prisma/schema.prisma`:
