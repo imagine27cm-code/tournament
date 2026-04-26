@@ -19,7 +19,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 500,
     value: "#ff0044",
     description: "Красный цвет ника в чате и списках",
-    icon: "🔴",
+    
   },
   NAME_GREEN: {
     id: "NAME_GREEN",
@@ -28,7 +28,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 500,
     value: "#00ff88",
     description: "Зеленый цвет ника",
-    icon: "🟢",
+    
   },
   NAME_CYAN: {
     id: "NAME_CYAN",
@@ -37,7 +37,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 750,
     value: "#00f0ff",
     description: "Яркий циановый цвет ника",
-    icon: "🔵",
+    
   },
   NAME_PURPLE: {
     id: "NAME_PURPLE",
@@ -46,7 +46,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 750,
     value: "#7a40ff",
     description: "Фиолетовый цвет ника",
-    icon: "🟣",
+    
   },
   NAME_GOLD: {
     id: "NAME_GOLD",
@@ -55,7 +55,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 2000,
     value: "#ffc800",
     description: "Премиум золотой цвет ника с эффектом свечения",
-    icon: "🥇",
+    
   },
   NAME_RAINBOW: {
     id: "NAME_RAINBOW",
@@ -64,7 +64,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 5000,
     value: "rainbow",
     description: "Анимированный радужный ник",
-    icon: "🌈",
+    
   },
 
   // Баннеры профиля
@@ -75,7 +75,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 300,
     value: "linear-gradient(135deg, #00f0ff 0%, #0066ff 100%)",
     description: "Голубой градиентный баннер профиля",
-    icon: "🌊",
+    
   },
   BANNER_PURPLE: {
     id: "BANNER_PURPLE",
@@ -84,7 +84,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 300,
     value: "linear-gradient(135deg, #7a40ff 0%, #ff00ff 100%)",
     description: "Фиолетовый градиент",
-    icon: "🌌",
+    
   },
 
   // Рамки аватара
@@ -95,7 +95,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 1000,
     value: "#ffc800",
     description: "Золотая рамка вокруг аватара",
-    icon: "✨",
+    
   },
   FRAME_DIAMOND: {
     id: "FRAME_DIAMOND",
@@ -104,7 +104,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 2500,
     value: "#00f0ff",
     description: "Блестящая алмазная рамка",
-    icon: "💎",
+    
   },
 
   // Титулы
@@ -115,7 +115,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 1500,
     value: "⚔️ Воин",
     description: "Отображается перед именем",
-    icon: "⚔️",
+    
   },
 
   // Кастомный тег
@@ -126,7 +126,7 @@ export const SHOP_ITEMS: Record<string, {
     price: 10000,
     value: "custom",
     description: "Собственный тег рядом с ником. Выберите любой текст и цвет",
-    icon: "🏷️",
+    
   },
 };
 
