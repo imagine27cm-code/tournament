@@ -35,10 +35,37 @@ const news = [
 ];
 
 export default function Home() {
+  const [tournaments, setTournaments] = useState<any[]>([]);
+  const [topPlayers, setTopPlayers] = useState<any[]>([]);
+  const [news, setNews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 500);
+    async function loadData() {
+      try {
+        const [tRes, pRes, nRes] = await Promise.all([
+          fetch("/api/tournaments", { cache: "no-store" }),
+          fetch("/api/players/top", { cache: "no-store" }),
+          fetch("/api/news", { cache: "no-store" })
+        ]);
+
+        const tData = await tRes.json();
+        const pData = await pRes.json();
+        const nData = await nRes.json();
+
+        setTournaments(tData.tournaments ?? []);
+        setTopPlayers((pData.players ?? []).slice(0, 5));
+        setNews((nData.news ?? []).slice(0, 4));
+      } catch {
+        setTournaments([]);
+        setTopPlayers([]);
+        setNews([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
   }, []);
 
   return (
@@ -105,28 +132,25 @@ export default function Home() {
                 <Link href="/tournaments" className="text-sm font-medium" style={{ color: '#A6FF00' }}>ВСЕ ТУРНИРЫ →</Link>
               </div>
 
-              <div className="space-y-3">
+            <div className="space-y-3">
                 {tournaments.map((tournament, index) => (
-                  <motion.div key={tournament.id} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 * index }} whileHover={{ scale: 1.008, boxShadow: '0 0 25px rgba(166, 255, 0, 0.1)', borderColor: '#A6FF00' }} className="p-4 rounded-md flex items-center gap-5" style={{ background: '#101414', border: '1px solid #1E2A25' }}>
-                    <div className="w-20 h-12 rounded overflow-hidden flex-shrink-0"><img src={tournament.image} alt="" className="w-full h-full object-cover" /></div>
-                    <div className="flex-grow">
-                      <div className="text-white font-bold text-lg mb-1">{tournament.name}</div>
-                      <div className="text-[#8E9A94] text-sm">ФОРМАТ: {tournament.format} | РЕЖИМ: {tournament.mode} | УР. {tournament.level}+</div>
-                    </div>
-                    <div className="text-center min-w-[100px]">
-                      <div className="text-white font-medium">{tournament.date}</div>
-                      <div className="text-[#8E9A94] text-sm">{tournament.time}</div>
-                    </div>
-                    <div className="text-center min-w-[100px]">
-                      <div className="text-white font-medium">{tournament.participants} / {tournament.maxParticipants}</div>
-                      <div className="text-[#8E9A94] text-sm">УЧАСТНИКИ</div>
-                    </div>
-                    <div className="text-center min-w-[120px]">
-                      <div className="font-bold text-lg" style={{ color: '#A6FF00' }}>{tournament.prize}</div>
-                      <div className="text-[#8E9A94] text-sm">ПРИЗОВОЙ ФОНД</div>
-                    </div>
-                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-5 py-2 font-bold text-sm" style={{ background: 'rgba(166, 255, 0, 0.1)', color: '#A6FF00', border: '1px solid #A6FF00', borderRadius: '2px' }}>УЧАСТВОВАТЬ</motion.button>
-                  </motion.div>
+                  <Link key={tournament.id} href={`/tournaments/${tournament.id}`} style={{ display: 'block' }}>
+                    <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 * index }} whileHover={{ scale: 1.008, boxShadow: '0 0 25px rgba(166, 255, 0, 0.1)', borderColor: '#A6FF00' }} className="p-4 rounded-md flex items-center gap-5" style={{ background: '#101414', border: '1px solid #1E2A25' }}>
+                      <div className="flex-grow">
+                        <div className="text-white font-bold text-lg mb-1">{tournament.name}</div>
+                        <div className="text-[#8E9A94] text-sm">СТАТУС: {tournament.status}</div>
+                      </div>
+                      <div className="text-center min-w-[120px]">
+                        <div className="text-white font-medium">{new Date(tournament.startDate).toLocaleDateString('ru-RU')}</div>
+                        <div className="text-[#8E9A94] text-sm">{new Date(tournament.startDate).toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>
+                      </div>
+                      <div className="text-center min-w-[100px]">
+                        <div className="text-white font-medium">{tournament.teamLimit}</div>
+                        <div className="text-[#8E9A94] text-sm">КОМАНД</div>
+                      </div>
+                      <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-5 py-2 font-bold text-sm" style={{ background: 'rgba(166, 255, 0, 0.1)', color: '#A6FF00', border: '1px solid #A6FF00', borderRadius: '2px' }}>ОТКРЫТЬ</motion.button>
+                    </motion.div>
+                  </Link>
                 ))}
               </div>
             </section>
@@ -162,14 +186,16 @@ export default function Home() {
                 <Link href="/players" className="text-sm font-medium" style={{ color: '#A6FF00' }}>ВСЕ ИГРОКИ →</Link>
               </div>
 
-              <div className="rounded-md overflow-hidden" style={{ background: '#101414', border: '1px solid #1E2A25' }}>
+            <div className="rounded-md overflow-hidden" style={{ background: '#101414', border: '1px solid #1E2A25' }}>
                 {topPlayers.map((player, index) => (
-                  <motion.div key={player.rank} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4, delay: 0.1 * index }} whileHover={{ background: '#1A2020' }} className="px-4 py-3 flex items-center gap-4 border-b border-[#1E2A25] last:border-b-0">
-                    <div className="w-6 text-center font-bold" style={{ color: player.rank <= 3 ? '#A6FF00' : '#8E9A94' }}>{player.rank}</div>
-                    <div className="w-8 h-8 rounded-full bg-[#1E2A25]" />
-                    <div className="flex-grow text-white font-medium">{player.nickname}</div>
-                    <div className="font-bold" style={{ color: '#A6FF00' }}>{player.points.toLocaleString()}</div>
-                  </motion.div>
+                  <Link key={player.id} href={`/profile/${player.id}`} style={{ display: 'block' }}>
+                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4, delay: 0.1 * index }} whileHover={{ background: '#1A2020' }} className="px-4 py-3 flex items-center gap-4 border-b border-[#1E2A25] last:border-b-0">
+                      <div className="w-6 text-center font-bold" style={{ color: index <= 2 ? '#A6FF00' : '#8E9A94' }}>{index + 1}</div>
+                      <div className="w-8 h-8 rounded-full bg-[#1E2A25]" />
+                      <div className="flex-grow text-white font-medium">{player.name}</div>
+                      <div className="font-bold" style={{ color: '#A6FF00' }}>{player.rp.toLocaleString()}</div>
+                    </motion.div>
+                  </Link>
                 ))}
               </div>
             </section>
