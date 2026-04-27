@@ -39,6 +39,10 @@ model User {
   tournamentsCreated     Tournament[]    @relation("TournamentCreator")
   achievements           Achievement[]
   inventory              InventoryItem[]
+  partiesLed             Party[]          @relation("PartyLeader")
+  partyMemberships       PartyMember[]
+  partyInvitesSent       PartyInvite[]    @relation("PartyInviteSender")
+  partyInvitesReceived   PartyInvite[]    @relation("PartyInviteReceiver")
 }
 
 model InventoryItem {
@@ -212,6 +216,7 @@ model Match {
   tournament    Tournament  @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   bans          MatchBan[]
   games         MatchGame[]
+  parties       Party[]
 
   @@unique([tournamentId, homeTeamId, awayTeamId])
   @@index([tournamentId, status])
@@ -245,6 +250,61 @@ model MatchGame {
 
   @@unique([matchId, gameNumber])
   @@index([matchId])
+}
+
+enum PartyStatus {
+  waiting
+  playing
+  closed
+}
+
+enum PartyInviteStatus {
+  pending
+  accepted
+  declined
+  expired
+}
+
+model Party {
+  id        String   @id @default(cuid())
+  leaderId  String
+  leader    User     @relation("PartyLeader", fields: [leaderId], references: [id])
+  status    PartyStatus @default(waiting)
+  maxSize   Int      @default(5)
+  createdAt DateTime @default(now())
+  members   PartyMember[]
+  invites   PartyInvite[]
+  matchId   String?
+  match     Match?   @relation(fields: [matchId], references: [id])
+}
+
+model PartyMember {
+  id        String   @id @default(cuid())
+  partyId   String
+  party     Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  isReady   Boolean  @default(false)
+  joinedAt  DateTime @default(now())
+
+  @@unique([partyId, userId])
+  @@index([userId])
+}
+
+model PartyInvite {
+  id         String   @id @default(cuid())
+  partyId    String
+  party      Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  fromUserId String
+  fromUser   User     @relation("PartyInviteSender", fields: [fromUserId], references: [id])
+  toUserId   String
+  toUser     User     @relation("PartyInviteReceiver", fields: [toUserId], references: [id])
+  status     PartyInviteStatus @default(pending)
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+
+  @@unique([partyId, toUserId])
+  @@index([toUserId, status])
 }
 
 enum UserRole {
