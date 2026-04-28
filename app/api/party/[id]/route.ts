@@ -51,7 +51,7 @@ export async function GET(
       return NextResponse.json({ error: 'Party not found' }, { status: 404 });
     }
 
-    const isMember = party.members.some(m => m.userId === session.user.id);
+    const isMember = party.members.some(m => m.userId === session.user!.id);
 
     if (!isMember) {
       return NextResponse.json({ error: 'You are not in this party' }, { status: 403 });
