@@ -39,8 +39,8 @@ export async function POST(
       if (match.status !== "BANNING") return { error: "NOT_BANNING" as const, status: 409 };
       if (match.banPhase === "DONE") return { error: "BAN_DONE" as const, status: 409 };
 
-      const isHomeCaptain = match.homeTeam.captainId === userId;
-      const isAwayCaptain = match.awayTeam.captainId === userId;
+      const isHomeCaptain = match.homeTeam?.captainId === userId;
+      const isAwayCaptain = match.awayTeam?.captainId === userId;
       if (!isHomeCaptain && !isAwayCaptain) return { error: "ONLY_CAPTAIN" as const, status: 403 };
 
       const actingTeamId = isHomeCaptain ? match.homeTeamId : match.awayTeamId;
