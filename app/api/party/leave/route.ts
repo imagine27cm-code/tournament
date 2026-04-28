@@ -35,7 +35,7 @@ export async function POST() {
         await tx.party.delete({
           where: { id: partyMember.partyId }
         });
-      } else if (partyMember.party.leaderId === session.user.id) {
+      } else if (partyMember.party.leaderId === session.user!.id) {
         const newLeader = await tx.partyMember.findFirst({
           where: { partyId: partyMember.partyId },
           orderBy: { joinedAt: 'asc' }

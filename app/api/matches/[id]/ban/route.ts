@@ -63,7 +63,7 @@ export async function POST(
       if (newPhase === "DONE") {
         // pick first map randomly from remaining 11
         bannedSet.add(parsed.data.mapId);
-        const map = randomMap(match.tournament.maps, bannedSet);
+        const map = randomMap(match.tournament!.maps, bannedSet);
         if (!map) return { error: "NO_MAPS_LEFT" as const, status: 500 };
 
         await tx.matchGame.create({
