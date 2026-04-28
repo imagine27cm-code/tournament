@@ -43,6 +43,7 @@ model User {
   partyMemberships       PartyMember[]
   partyInvitesSent       PartyInvite[]    @relation("PartyInviteSender")
   partyInvitesReceived   PartyInvite[]    @relation("PartyInviteReceiver")
+  matchmakingQueueEntry  MatchmakingQueue?
 }
 
 model InventoryItem {
@@ -196,10 +197,10 @@ model Round {
 
 model Match {
   id            String      @id @default(cuid())
-  tournamentId  String
+  tournamentId  String?
   roundId       String?
-  homeTeamId    String
-  awayTeamId    String
+  homeTeamId    String?
+  awayTeamId    String?
   status        MatchStatus @default(SCHEDULED)
   banSeed       Int         @default(0)
   banPhase      BanPhase    @default(T1_BAN_1)
@@ -210,16 +211,29 @@ model Match {
   startedAt     DateTime?
   finishedAt    DateTime?
   winnerTeamId  String?
-  awayTeam      Team        @relation("AwayTeam", fields: [awayTeamId], references: [id])
-  homeTeam      Team        @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  mapId         String?
+  teamA         String[]
+  teamB         String[]
+  isMatchmaking Boolean     @default(false)
+  awayTeam      Team?       @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  homeTeam      Team?       @relation("HomeTeam", fields: [homeTeamId], references: [id])
   round         Round?      @relation(fields: [roundId], references: [id])
-  tournament    Tournament  @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  tournament    Tournament? @relation(fields: [tournamentId], references: [id])
   bans          MatchBan[]
   games         MatchGame[]
   parties       Party[]
 
   @@unique([tournamentId, homeTeamId, awayTeamId])
-  @@index([tournamentId, status])
+  @@index([status])
+}
+
+model MatchmakingQueue {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
 }
 
 model MatchBan {
