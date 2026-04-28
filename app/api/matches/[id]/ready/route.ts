@@ -30,8 +30,8 @@ export async function POST(
     });
     if (!match) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
 
-    const isHomeCaptain = match.homeTeam.captainId === userId;
-    const isAwayCaptain = match.awayTeam.captainId === userId;
+    const isHomeCaptain = match.homeTeam?.captainId === userId;
+    const isAwayCaptain = match.awayTeam?.captainId === userId;
     if (!isHomeCaptain && !isAwayCaptain) {
       return NextResponse.json({ error: "ONLY_CAPTAIN" }, { status: 403 });
     }
