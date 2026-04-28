@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { motion } from "framer-motion";
 
 // Демо данные
@@ -35,10 +36,12 @@ const news = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [tournaments, setTournaments] = useState<any[]>([]);
   const [topPlayers, setTopPlayers] = useState<any[]>([]);
   const [news, setNews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [creatingParty, setCreatingParty] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -85,8 +88,32 @@ export default function Home() {
                 <p className="text-[#8E9A94] text-lg mb-8 max-w-xl">Участвуй в официальных турнирах, собирай команду, поднимай рейтинг и выигрывай призовые!</p>
 
                 <div className="flex gap-4 flex-wrap">
-                  <motion.button whileHover={{ scale: 1.03, boxShadow: '0 0 30px rgba(166, 255, 0, 0.4)' }} whileTap={{ scale: 0.98 }} className="px-8 py-4 font-bold text-lg tracking-wide" style={{ background: '#A6FF00', color: '#050505', border: 'none', borderRadius: '2px' }}>ИГРАТЬ →</motion.button>
-                  <motion.button whileHover={{ scale: 1.03, borderColor: '#A6FF00' }} whileTap={{ scale: 0.98 }} className="px-8 py-4 font-bold text-lg tracking-wide bg-transparent text-white" style={{ border: '1px solid #1E2A25', borderRadius: '2px' }}>СМОТРЕТЬ ТУРНИРЫ</motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.03, boxShadow: '0 0 30px rgba(166, 255, 0, 0.4)' }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-8 py-4 font-bold text-lg tracking-wide"
+                    style={{ background: '#A6FF00', color: '#050505', border: 'none', borderRadius: '2px' }}
+                    disabled={creatingParty}
+                    onClick={async () => {
+                      setCreatingParty(true);
+                      try {
+                        const res = await fetch('/api/party/create', { method: 'POST' });
+                        if (res.ok) {
+                          const data = await res.json();
+                          router.push(`/party/${data.partyId}`);
+                        }
+                      } catch (error) {
+                        console.error('Create party error:', error);
+                      } finally {
+                        setCreatingParty(false);
+                      }
+                    }}
+                  >
+                    {creatingParty ? 'СОЗДАНИЕ...' : 'ИГРАТЬ →'}
+                  </motion.button>
+                  <motion.button whileHover={{ scale: 1.03, borderColor: '#A6FF00' }} whileTap={{ scale: 0.98 }} className="px-8 py-4 font-bold text-lg tracking-wide bg-transparent text-white" style={{ border: '1px solid #1E2A25', borderRadius: '2px' }}>
+                    НАЙТИ ИГРУ
+                  </motion.button>
                 </div>
               </motion.div>
             </div>
