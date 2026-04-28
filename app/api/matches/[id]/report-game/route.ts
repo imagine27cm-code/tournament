@@ -42,8 +42,8 @@ export async function POST(
       if (!match) return { error: "NOT_FOUND" as const, status: 404 };
       if (match.status !== "IN_PROGRESS") return { error: "BAD_STATUS" as const, status: 409 };
 
-      const isHomeCaptain = match.homeTeam.captainId === userId;
-      const isAwayCaptain = match.awayTeam.captainId === userId;
+      const isHomeCaptain = match.homeTeam?.captainId === userId;
+      const isAwayCaptain = match.awayTeam?.captainId === userId;
       if (!isHomeCaptain && !isAwayCaptain) return { error: "ONLY_CAPTAIN" as const, status: 403 };
 
       if (![match.homeTeamId, match.awayTeamId].includes(parsed.data.winnerTeamId)) {
