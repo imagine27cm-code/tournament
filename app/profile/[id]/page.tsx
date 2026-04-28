@@ -43,7 +43,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
   const showEmail = session?.user?.id === user.id;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="mx-auto max-w-4xl px-6 py-10">
       <ProfileClient
         user={{ ...user, team }}
         currentUserId={session?.user?.id ?? null}

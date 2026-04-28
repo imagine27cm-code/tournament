@@ -23,8 +23,8 @@ export default async function TournamentPage({
   });
 
   if (!tournament) {
-    return (
-      <div className="mx-auto max-w-6xl px-4 py-8">
+  return (
+    <div className="mx-auto max-w-6xl px-6 py-10">
         <div className="cyber-card rounded-lg p-6" style={{color: '#ff0044'}}>Турнир не найден.</div>
       </div>
     );

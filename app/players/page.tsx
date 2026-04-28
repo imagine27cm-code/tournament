@@ -72,8 +72,10 @@ export default async function PlayersPage() {
   }));
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-3xl font-semibold tracking-tight gradient-text" style={{fontFamily: "'Orbitron', sans-serif", textShadow: '0 0 20px #00f0ff40'}}>ИГРОКИ</h1>
+    <div className="mx-auto max-w-6xl px-6 py-10">
+      <h1 className="text-4xl font-bold tracking-wide flex items-center gap-3" style={{fontFamily: "'Orbitron', sans-serif", color: '#ffffff'}}>
+        <span style={{ color: '#A6FF00' }}>▌</span> ИГРОКИ
+      </h1>
       <p className="mt-2 text-sm" style={{color: '#8888aa'}}>
         Все зарегистрированные игроки: добавить в друзья или пригласить в команду
       </p>
