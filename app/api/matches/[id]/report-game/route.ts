@@ -95,8 +95,8 @@ export async function POST(
 
         const nextMap =
           (parsed.data.nextMapId
-            ? match.tournament.maps.find((m) => m.id === parsed.data.nextMapId && !exclude.has(m.id))
-            : null) ?? randomMap(match.tournament.maps, exclude);
+            ? match.tournament!.maps.find((m) => m.id === parsed.data.nextMapId && !exclude.has(m.id))
+            : null) ?? randomMap(match.tournament!.maps, exclude);
 
         if (!nextMap) return { error: "NO_MAPS_LEFT" as const, status: 500 };
 
