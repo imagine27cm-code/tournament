@@ -97,13 +97,39 @@ export default function Home() {
                     onClick={async () => {
                       setCreatingParty(true);
                       try {
-                        const res = await fetch('/api/party/create', { method: 'POST' });
+                        const authRes = await fetch('/api/auth/session');
+                        const session = await authRes.json();
+                        
+                        if (!session?.user) {
+                          router.push('/signin');
+                          return;
+                        }
+
+                        const res = await fetch('/api/party/create', { 
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          }
+                        });
+                        
+                        if (res.status === 401) {
+                          router.push('/signin');
+                          return;
+                        }
+
                         if (res.ok) {
                           const data = await res.json();
-                          router.push(`/party/${data.partyId}`);
+                          if (data.partyId) {
+                            router.push(`/party/${data.partyId}`);
+                          }
+                        } else {
+                          const error = await res.json();
+                          console.error('Create party failed:', error);
+                          alert(error.error || 'Ошибка создания группы');
                         }
                       } catch (error) {
                         console.error('Create party error:', error);
+                        alert('Ошибка соединения с сервером');
                       } finally {
                         setCreatingParty(false);
                       }
